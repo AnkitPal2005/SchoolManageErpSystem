@@ -1,0 +1,33 @@
+﻿<h3>All Students</h3>
+<div id="studentContainer">
+    Loading....
+</div>
+<div id="modalContainer"></div>
+<script>
+    $(function () {
+        LoadStudents();
+    });
+
+    function LoadStudents() {
+        $.post("/Admin/LoadStudents", function (res) {
+            $("#studentContainer").html(res);
+        });
+    }
+
+    function deleteStudent(id) {
+        
+        if (confirm("Are you sure to delete this user?")) {
+            $.post("/Admin/DeleteStudent", { id: id }, function (res) {
+                alert(res.message);
+                if (res.success) {
+                    LoadStudents();
+                }
+            });
+        }
+    }
+    function editStudent(id){
+        $.get("/Admin/EditStudent?id="+id,function(res){
+            $("#modalContainer").html(res);
+        })
+    }
+</script>

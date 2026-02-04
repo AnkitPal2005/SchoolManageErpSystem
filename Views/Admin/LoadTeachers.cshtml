@@ -1,0 +1,46 @@
+﻿@model List<TeacherListViewModel>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Subject</th>
+            <th width="150">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var t in Model)
+        {
+            <tr>
+                <td>@t.FullName</td>
+                <td>@t.Email</td>
+                <td>@t.PhoneNumber</td>
+                <td>@t.SubjectName</td>
+                <td>
+
+                    <button class="btn btn-sm btn-warning"
+                            onclick="editTeacher('@t.UserId')">
+                        Edit
+                    </button>
+
+                    @if (t.SubjectId == null)
+                    {
+                        <button class="btn btn-sm btn-danger"
+                                onclick="deleteTeacher('@t.UserId')">
+                            Delete
+                        </button>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">
+                            Assigned
+                        </span>
+                    }
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

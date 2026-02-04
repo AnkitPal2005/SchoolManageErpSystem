@@ -1,0 +1,34 @@
+﻿<h3>All Teachers</h3>
+<div id="teacherContainer">
+    Loading....
+</div>
+<div id="modalContainer"></div>
+<script>
+    $(function(){
+        LoadTeachers();
+    });
+
+    function LoadTeachers() {
+        $.post("/Admin/LoadTeachers", function (res) {
+            $("#teacherContainer").html(res);
+        });
+    }
+
+    function deleteTeacher(id){
+     
+        if (confirm("Are you sure to delete this user?")) {
+            $.post("/Admin/DeleteTeacher", { id: id }, function(res){
+                alert(res.message);
+                if (res.success) {
+                    LoadTeachers();
+                }
+            });
+        }
+    }
+    function editTeacher(id){
+        $.get("/Admin/EditTeacher",{id:id},function(res){
+            $("#modalContainer").html(res);
+            LoadTeachers();
+        })
+    }
+</script>

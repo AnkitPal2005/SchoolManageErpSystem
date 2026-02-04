@@ -1,0 +1,63 @@
+﻿@model SchoolManegementNew.Models.StudentListViewModel
+
+<div class="modal fade show" style="display:block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Student</h5>
+                <button class="btn-close" onclick="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="userId" value="@Model.UserId" />
+
+                <input class="form-control mb-2" id="fullName"
+                       value="@Model.FullName" placeholder="Name" />
+
+                <input class="form-control mb-2" id="phone"
+                       value="@Model.PhoneNumber" placeholder="Phone" />
+
+                <input class="form-control mb-2" id="roll"
+                       value="@Model.RollNumber" placeholder="Roll No" />
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-success" onclick="updateStudent()">Update</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+        function closeModal()
+    {
+        $(".modal").remove();
+    }
+    function updateStudent()
+    {
+        var data = {
+            UserId: $("#userId").val(),
+            FullName: $("#fullName").val(),
+            PhoneNumber: $("#phone").val(),
+            RollNumber: $("#roll").val()
+        };
+
+        $.post("/Admin/EditStudent", data, function (res) {
+
+            alert(res.message);
+
+            if (res.success)
+            {
+                closeModal();
+                LoadStudents();
+            }
+
+        });
+    }
+
+</script>

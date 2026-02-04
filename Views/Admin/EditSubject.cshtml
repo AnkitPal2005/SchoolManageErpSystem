@@ -1,0 +1,53 @@
+﻿@model SchoolManegementNew.Models.Subject
+
+<div class="modal fade show" style="display:block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Subject</h5>
+                <button class="btn-close" onclick="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="text"
+                       id="editName"
+                       class="form-control"
+                       value="@Model.Name" />
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-success" onclick="updateSubject(@Model.Id)">Update</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeModal()
+    {
+        $(".modal").remove();
+    }
+    function updateSubject(id)
+    {
+        var name = $("#editName").val();
+
+        $.post("/Admin/EditSubject",
+            { id: id, name: name },
+            function (res) {
+
+                alert(res.message);
+
+                if (res.success)
+                {
+                    closeModal();
+                    LoadSubjects();
+                }
+            });
+    }
+
+</script>

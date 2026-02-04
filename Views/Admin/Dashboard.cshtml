@@ -1,0 +1,59 @@
+﻿@* @model DashboardViewModel
+<h3>Admin Dashboard</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card p-3 shadow">
+            <h5>Total Teachers</h5>
+            <h2>@Model.TeacherCount</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 shadow">
+            <h5>Total Students</h5>
+            <h2>@Model.StudentCount</h2>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-3 shadow">
+            <h5>Total Subjects</h5>
+            <h2>@Model.SubjectCount</h2>
+        </div>
+    </div>
+</div> *@
+@model DashboardViewModel
+
+<h3>Admin Dashboard</h3>
+
+@if (Model != null)
+{
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow">
+                <h5>Total Teachers</h5>
+                <h2>@Model.TeacherCount</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow">
+                <h5>Total Students</h5>
+                <h2>@Model.StudentCount</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow">
+                <h5>Total Subjects</h5>
+                <h2>@Model.SubjectCount</h2>
+            </div>
+        </div>
+
+    </div>
+}
+else
+{
+    <div class="alert alert-danger">
+        Dashboard data not loaded.
+    </div>
+}

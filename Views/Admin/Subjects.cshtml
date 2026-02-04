@@ -1,0 +1,48 @@
+﻿<h3>All Subjects</h3>
+<button class="btn btn-primary mb-3" onclick="openAddSubject()">Add Subject</button>
+<div id="subjectContainer">
+    Loading......
+</div>
+<div id="modalContainer"></div>
+<script>
+    // use the jQuery shorthand to avoid deprecated $(document).ready(...)
+    $(function () {
+        LoadSubjects();
+    });
+
+    function LoadSubjects(){
+        $.get("/Admin/LoadSubjects",function(res){
+            $("#subjectContainer").html(res);
+        });
+    }
+    function openAddSubject(){
+        $.get("/Admin/AddSubjects",function(res){
+            console.log(res);
+            $("#modalContainer").html(res);
+        });
+    }
+    function editSubject(id){
+        $.get("/Admin/EditSubject",{ id: id },function(res){
+            console.log(res);
+            $("#modalContainer").html(res);
+            LoadSubjects();
+            
+        })
+    }
+        function deleteSubject(id)
+    {
+        if (confirm("Are you sure you want to delete this subject?"))
+        {
+            $.post("/Admin/DeleteSubject", { id: id }, function (res) {
+
+                alert(res.message);
+
+                if (res.success)
+                {
+                    LoadSubjects();
+                }
+
+            });
+        }
+    }
+</script>

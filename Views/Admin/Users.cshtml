@@ -1,0 +1,11 @@
+﻿<h3>All Users</h3>
+<button class="btn btn-primary mb-3" onclick="openAddUser()">Add User</button>
+<div id="userContainer">UserList.....</div>
+<div id="modalContainer"></div>
+<script>
+    function openAddUser(){
+        $.get("/Admin/AddUser",function(res){
+            $("#modalContainer").html(res);
+        });
+    }
+</script>

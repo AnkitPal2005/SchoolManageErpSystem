@@ -1,0 +1,55 @@
+﻿<div class="modal fade show" style="display:block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Add Subject</h5>
+                <button class="btn-close" onclick="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="text" id="subjectName"
+                       class="form-control"
+                       placeholder="Enter Subject Name" />
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-success" onclick="saveSubject()">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    function closeModal()
+    {
+        $(".modal").remove();
+    }
+
+       function saveSubject()
+    {
+       var name = document.getElementById("subjectName").value;
+     
+        $.post("/Admin/AddSubject", { subjectName: name }, function (res) {
+
+            if (res.success)
+            {
+                alert(res.message);
+                closeModal();
+                LoadSubjects();
+            }
+            else
+            {
+                alert(res.message);
+            }
+
+        });
+    }
+
+
+</script>

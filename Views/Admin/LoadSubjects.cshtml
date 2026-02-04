@@ -1,0 +1,30 @@
+﻿@model List<SchoolManegementNew.Models.Subject>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Subject Name</th>
+            <th width="150">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Name</td>
+                <td>
+                    <button class="btn btn-sm btn-warning"
+                            onclick="editSubject(@s.Id)">
+                        Edit
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            onclick="deleteSubject(@s.Id)">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

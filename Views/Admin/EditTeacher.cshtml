@@ -1,0 +1,84 @@
+﻿@model SchoolManegementNew.Models.TeacherEditViewModel
+
+<div class="modal fade show" style="display:block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Teacher</h5>
+                <button class="btn-close" onclick="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="userId" value="@Model.UserId"/>
+
+                <input class="form-control mb-2"
+                       id="name"
+                       value="@Model.FullName" />
+
+                <input class="form-control mb-2"
+                       id="phone"
+                       value="@Model.PhoneNumber" />
+
+                <select class="form-control" id="subject">
+
+                    <option value="">-- Select Subject --</option>
+
+                    @foreach (var s in ViewBag.Subjects)
+                    {
+                        if (s.Id == Model.SubjectId)
+                        {
+                            <option value="@s.Id" selected>
+                                @s.Name
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@s.Id">
+                                @s.Name
+                            </option>
+                        }
+                    }
+
+
+                </select>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-success" onclick="updateTeacher()">Update</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+        function closeModal()
+    {
+        $(".modal").remove();
+    }
+function updateTeacher()
+{
+    var data = {
+        UserId: $("#userId").val(),
+        FullName: $("#name").val(),
+        PhoneNumber: $("#phone").val(),
+        SubjectId: $("#subject").val()
+    };
+
+    $.post("/Admin/EditTeacher", data, function (res) {
+
+        alert(res.message);
+
+        if (res.success)
+        {
+            closeModal();
+            LoadTeachers();
+        }
+    });
+}
+
+</script>

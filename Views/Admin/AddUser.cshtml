@@ -1,0 +1,111 @@
+﻿<div class="modal fade show" tabindex="-1" style="display:block;">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>Add User</h5>
+            <button class="btn-close" onclick="closeModal()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-2">
+                <label>
+                    <input type="radio" name="roleType" value="Teacher" onchange="toggleFields()">Teacher
+                </label>
+                <label>
+                        <input type="radio" name="roleType" value="Student" onchange="toggleFields()">Student
+                </label>
+            </div>
+                <!-- Common Fields -->
+
+                <input class="form-control mb-2" id="fullName" placeholder="Full Name">
+                <input class="form-control mb-2" id="email" placeholder="Email">
+                <input class="form-control mb-2" id="phone" placeholder="Phone">
+                <input class="form-control mb-2" id="password" placeholder="Password">
+                <!-- Student Only -->
+
+                <div id="studentFields" style="display:none;">
+                    <input class="form-control mb-2" id="rollNo" placeholder="Roll Number">
+                </div>
+                <!-- Teacher Only -->
+
+                <div id="teacherFields" style="display:none;">
+                    <select class="form-control mb-2" id="subjectDropdown">
+                        <option>Select Subject</option>
+                    </select>
+                </div>
+        </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-success" onclick="saveUser()">Save</button>
+            </div>
+    </div>
+</div>
+</div>
+<script>
+function closeModal()
+{
+    $(".modal").remove();
+}
+
+function toggleFields()
+{
+    var role = $("input[name='roleType']:checked").val();
+
+    if (role == "Student")
+    {
+        $("#studentFields").show();
+        $("#teacherFields").hide();
+    }
+    else if (role == "Teacher")
+    {
+        $("#teacherFields").show();
+        $("#studentFields").hide();
+        loadSubjects();
+    }
+}
+    function loadSubjects()
+    {
+        $.get("/Admin/LoadFreeSubjects", function (data) {
+
+            $("#subjectDropdown").empty();
+            $("#subjectDropdown").append("<option value=''>Select Subject</option>");
+
+            $.each(data, function (i, item) {
+                $("#subjectDropdown").append(
+                    `<option value="${item.id}">${item.name}</option>`
+                );
+            });
+
+        });
+    }
+
+    function saveUser()
+    {
+        var role = $("input[name='roleType']:checked").val();
+
+        var data = {
+            RoleType: role,
+            FullName: $("#fullName").val(),
+            Email: $("#email").val(),
+            PhoneNumber: $("#phone").val(),
+            Password: $("#password").val(),
+            RollNumber: $("#rollNo").val(),
+            SubjectId: $("#subjectDropdown").val()
+        };
+
+        $.post("/Admin/AddUser", data, function (res) {
+
+            if (res.success)
+            {
+                alert(res.message);
+                closeModal();
+            }
+            else
+            {
+                alert(res.message);
+            }
+
+        });
+    }
+
+
+</script>
