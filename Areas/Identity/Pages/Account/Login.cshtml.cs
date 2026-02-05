@@ -61,6 +61,15 @@ namespace SchoolManegementNew.Areas.Identity.Pages.Account
         public class InputModel
         {
             /// <summary>
+            /// for role based login
+            /// </summary>
+           
+
+                [Required]
+                public string Role { get; set; }   // 👈 NEW
+           
+
+            /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
@@ -81,6 +90,7 @@ namespace SchoolManegementNew.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Display(Name = "Remember me?")]
+
             public bool RememberMe { get; set; }
         }
 
@@ -112,11 +122,36 @@ namespace SchoolManegementNew.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                //if (result.Succeeded)
+                //{
+                //    _logger.LogInformation("User logged in.");
+                //    return LocalRedirect(returnUrl);
+                //}
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                    var roles = await _signInManager.UserManager.GetRolesAsync(user);
+
+                    if (!roles.Contains(Input.Role))
+                    {
+                        await _signInManager.SignOutAsync();
+                        ModelState.AddModelError(string.Empty, "You are not authorized for selected role.");
+                        return Page();
+                    }
+
+                    // Role based redirect
+                    if (Input.Role == "Admin")
+                        return RedirectToAction("Dashboard", "Admin");
+
+                    if (Input.Role == "Teacher")
+                        return RedirectToAction("Dashboard", "Teacher");
+
+                    if (Input.Role == "Student")
+                        return RedirectToAction("Dashboard", "Student");
+
                     return LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });

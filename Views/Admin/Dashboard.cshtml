@@ -1,59 +1,64 @@
-﻿@* @model DashboardViewModel
-<h3>Admin Dashboard</h3>
-<div class="row">
-    <div class="col-md-4">
-        <div class="card p-3 shadow">
-            <h5>Total Teachers</h5>
-            <h2>@Model.TeacherCount</h2>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card p-3 shadow">
-            <h5>Total Students</h5>
-            <h2>@Model.StudentCount</h2>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card p-3 shadow">
-            <h5>Total Subjects</h5>
-            <h2>@Model.SubjectCount</h2>
-        </div>
-    </div>
-</div> *@
-@model DashboardViewModel
+﻿@model DashboardViewModel
 
 <h3>Admin Dashboard</h3>
 
-@if (Model != null)
+@* @if (Model != null)
 {
     <div class="row">
 
         <div class="col-md-4">
             <div class="card p-3 shadow">
                 <h5>Total Teachers</h5>
-                <h2>@Model.TeacherCount</h2>
+                <h2 id="teacherCount">@Model.TeacherCount</h2>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="card p-3 shadow">
                 <h5>Total Students</h5>
-                <h2>@Model.StudentCount</h2>
+                <h2 id="studentCount">@Model.StudentCount</h2>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="card p-3 shadow">
                 <h5>Total Subjects</h5>
-                <h2>@Model.SubjectCount</h2>
+                <h2 id="subjectCount">@Model.SubjectCount</h2>
             </div>
         </div>
 
     </div>
-}
-else
-{
-    <div class="alert alert-danger">
-        Dashboard data not loaded.
+} *@
+
+<div class="col-md-4">
+    <div class="card p-3 shadow">
+        <h5>Total Teachers</h5>
+        <h2 id="teacherCount"></h2>
     </div>
-}
+</div>
+
+<div class="col-md-4">
+    <div class="card p-3 shadow">
+        <h5>Total Students</h5>
+        <h2 id="studentCount"></h2>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="card p-3 shadow">
+        <h5>Total Subjects</h5>
+        <h2 id="subjectCount"></h2>
+    </div>
+</div>
+
+<script>
+    function GetDashboardCount(){
+        $.get("/Admin/GetDashboardCount",function(res){
+            $("#teacherCount").text(res.teacherCount);
+             $("#studentCount").text(res.studentCount);
+              $("#subjectCount").text(res.subjectCount);
+              $("#subject").text(res.subjectCount);
+        })
+    }
+  GetDashboardCount();
+</script>

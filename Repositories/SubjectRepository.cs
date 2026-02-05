@@ -67,7 +67,7 @@ namespace SchoolManegementNew.Repositories
         FROM UserProfiles
         WHERE UserType = 'Teacher'
         AND SubjectId IS NOT NULL
-        AND UserId != @Id
+        AND (UserId != @Id OR @Id Is NULL)
     )";
 
             return _db.Query<Subject>(query, new { Id = teacherId }).ToList();

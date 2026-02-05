@@ -1,0 +1,53 @@
+﻿@model List<UserListViewModel>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Subject/RollNumber</th>
+        <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var u in Model)
+        {
+            <tr>
+                <td>@u.FullName</td>
+                <td>@u.Email</td>
+                <td>@u.PhoneNumber</td>
+                <td>@u.UserType</td>
+                <td>
+                    @if (u.UserType == "Teacher")
+                    {
+                        <span>@u.SubjectName</span>
+                    }
+                    else if (u.UserType == "Student")
+                    {
+                        <span>@u.RollNumber</span>
+                    }
+                    else
+                    {
+                        <span>---</span>
+                    }
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-warning" onclick="editUser('@u.UserId','@u.UserType')">Edit</button>
+                    @if (string.IsNullOrEmpty(u.SubjectName))
+
+                    {
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser('@u.UserId','@u.UserType')">Delete</button>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">
+                            Assigned
+                        </span>
+                    }
+                   
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

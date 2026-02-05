@@ -3,9 +3,77 @@
 <div id="userContainer">UserList.....</div>
 <div id="modalContainer"></div>
 <script>
+    function closeModal()
+    {
+        $(".modal").remove();
+    }
+    $(document).ready(function(){
+         loadUsers();
+     });
+     function LoadTeachers(){
+         loadUsers();
+     }
+     function LoadStudents(){
+         loadUsers();
+     }
+    function loadUsers(){
+        $.post("/Admin/LoadUsers",function(res){
+            
+            $("#userContainer").html(res);
+        })
+    }
     function openAddUser(){
+        loadUsers();
         $.get("/Admin/AddUser",function(res){
             $("#modalContainer").html(res);
-        });
+    })
+    }
+    
+    function editUser(id,role){
+        if(role=="Teacher"){
+            $.get("/Admin/EditTeacher",{id:id},function(res){
+                $("#modalContainer").html(res);
+                
+   
+               LoadTeachers();
+             
+            })
+        }
+             if(role=="Student"){
+                $.get("/Admin/EditStudent",{id:id},function(res){
+                    $("#modalContainer").html(res);
+                    // closeModal();
+                // LoadTeachers();
+                LoadStudents();
+                })
+            }
+            // else{
+            //     alert("error while Editing");
+            // }
+        }
+           
+    function deleteUser(id, role) {
+
+        if (!confirm("Are you sure?")) return;
+
+        if (role === "Admin") {
+            alert("Admin cannot be deleted");
+            return;
+        }
+
+        if (role === "Teacher") {
+            $.post("/Admin/DeleteTeacher", { id: id }, function (res) {
+                alert(res.message);
+                if (res.success) loadUsers();
+            });
+        }
+        else if (role === "Student") {
+            $.post("/Admin/DeleteStudent", { id: id }, function (res) {
+                alert(res.message);
+                if (res.success) loadUsers();
+            });
+        }
     }
 </script>
+
+    

@@ -13,9 +13,10 @@ namespace SchoolManegementNew.Controllers
         private readonly ITeacherRepository _teacherRepo;
         private readonly IStudentRepository _studentRepo;
         private readonly ISubjectRepository _subjectRepo;
+        private readonly IUserRepository _userRepo;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AdminController(IDashboardRepository dashboardRepo, ITeacherRepository teacherRepo, IStudentRepository studentRepo, ISubjectRepository subjectRepo, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
+        public AdminController(IDashboardRepository dashboardRepo, ITeacherRepository teacherRepo, IStudentRepository studentRepo, ISubjectRepository subjectRepo, RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager, IUserRepository userRepo)
         {
             _teacherRepo = teacherRepo;
             _dashboardRepo = dashboardRepo;
@@ -23,18 +24,32 @@ namespace SchoolManegementNew.Controllers
             _subjectRepo = subjectRepo;
             _roleManager = roleManager;
             _userManager = userManager;
+            _userRepo = userRepo;
         }
         public IActionResult Dashboard()
         {
+            //try
+            //{
+            //    var model = _dashboardRepo.GetDashboardCounts();
+            //    return View(model);
+            //}
+            //catch (Exception ex)
+            //{
+            //    ViewBag.Error = ex.Message;
+            //    return View();
+            //}
+           return View();
+        }
+        [HttpGet]
+        public IActionResult GetDashboardCount()
+        {
             try
             {
-                var model = _dashboardRepo.GetDashboardCounts();
-                return View(model);
+                var data = _dashboardRepo.GetDashboardCounts();
+                return Json(data);
             }
-            catch (Exception ex)
-            {
-                ViewBag.Error = ex.Message;
-                return View();
+            catch (Exception ex) { 
+                return Json(new { message = ex.Message });
             }
         }
         public IActionResult Teachers()
@@ -290,8 +305,20 @@ namespace SchoolManegementNew.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-
-
+        [HttpPost]
+        public IActionResult LoadUsers()
+        {
+            try
+            {
+                var data = _userRepo.GetAllUsers();
+                return PartialView(data);
+            }
+            catch(Exception ex)
+            {
+                return Json(new {success=false, message=ex.Message});
+            }
+        }
+      
     }
 }
 

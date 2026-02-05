@@ -11,20 +11,15 @@ namespace SchoolManegementNew.Repositories
         }
         public DashboardViewModel GetDashboardCounts()
         {
-            try
-            {
-                string query = @"
-SELECT
-(SELECT COUNT(*) FROM UserProfiles WHERE UserType='Teacher')AS TeacherCount,
-SELECT COUNT(*) FROM UserProfiles WHERE UserType='Student')AS StudentCount,
-SELECT COUNT(*) FROM Subjects)AS SubjectCount,
-";
-                return _db.QuerySingle<DashboardViewModel>(query);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            string query = @"
+    SELECT
+        (SELECT COUNT(*) FROM UserProfiles WHERE UserType = 'Teacher') AS TeacherCount,
+        (SELECT COUNT(*) FROM UserProfiles WHERE UserType = 'Student') AS StudentCount,
+        (SELECT COUNT(*) FROM Subjects) AS SubjectCount
+    ";
+
+            return _db.QuerySingle<DashboardViewModel>(query);
         }
+
     }
 }

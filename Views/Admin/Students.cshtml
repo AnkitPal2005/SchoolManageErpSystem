@@ -28,6 +28,7 @@
     function editStudent(id){
         $.get("/Admin/EditStudent?id="+id,function(res){
             $("#modalContainer").html(res);
+            LoadStudents();
         })
     }
 </script>

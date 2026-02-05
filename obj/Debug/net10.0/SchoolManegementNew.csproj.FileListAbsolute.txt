@@ -404,3 +404,4 @@ C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\bin\Debug\net10.0\Dapper.dll
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\obj\Debug\net10.0\compressed\7g2r3qut6p-{0}-o1o13a6vjx-o1o13a6vjx.gz
+C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\obj\Debug\net10.0\SchoolManegementNew.sourcelink.json
