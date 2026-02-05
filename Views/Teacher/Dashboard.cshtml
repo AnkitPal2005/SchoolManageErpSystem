@@ -1,0 +1,17 @@
+﻿<h1>Welcome To Teacher Dashboard</h1>
+<div class="row">
+<div class="col-md-4">
+    <div class="card p-3 shadow">
+        <h5>Total Students</h5>
+        <h2 id="studentCount"></h2>
+    </div>
+</div>
+</div>
+<script>
+    function GetStudentCount(){
+        $.get("/Teacher/GetDashboardCount",function(res){
+            $("#studentCount").text(res.studentCount);
+        })
+    }
+    GetStudentCount();
+</script>

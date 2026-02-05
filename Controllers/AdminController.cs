@@ -26,18 +26,10 @@ namespace SchoolManegementNew.Controllers
             _userManager = userManager;
             _userRepo = userRepo;
         }
+        
+
         public IActionResult Dashboard()
         {
-            //try
-            //{
-            //    var model = _dashboardRepo.GetDashboardCounts();
-            //    return View(model);
-            //}
-            //catch (Exception ex)
-            //{
-            //    ViewBag.Error = ex.Message;
-            //    return View();
-            //}
            return View();
         }
         [HttpGet]
@@ -181,7 +173,7 @@ namespace SchoolManegementNew.Controllers
             {
                 if (ex.Message.Contains("UQ_Student_Roll"))
                     return Json(new { success = false, message = "Roll number already exists" });
-
+                      
                 if (ex.Message.Contains("UQ_Teacher_Subject"))
                     return Json(new { success = false, message = "Subject already assigned to another teacher" });
                 if(ex.Message.Contains("UQ_User_Phone"))

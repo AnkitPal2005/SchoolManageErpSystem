@@ -1,7 +1,8 @@
 ﻿@model DashboardViewModel
 
-<h3>Admin Dashboard</h3>
-
+<i>
+    <h3 style="color:blue">Admin Dashboard</h3>
+</i>
 @* @if (Model != null)
 {
     <div class="row">
@@ -29,7 +30,7 @@
 
     </div>
 } *@
-
+<div class="row">
 <div class="col-md-4">
     <div class="card p-3 shadow">
         <h5>Total Teachers</h5>
@@ -50,7 +51,7 @@
         <h2 id="subjectCount"></h2>
     </div>
 </div>
-
+</div>
 <script>
     function GetDashboardCount(){
         $.get("/Admin/GetDashboardCount",function(res){

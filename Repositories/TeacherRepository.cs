@@ -77,6 +77,42 @@ where up.UserType='Teacher'
                 Id = model.UserId
             });
         }
+        public TeacherProfileViewModel GetTeacherProfileById(string userId)
+        {
+            string query = @"
+    SELECT 
+           up.UserId,    
+        up.FullName,
+        u.Email,
+        up.PhoneNumber,
+        ISNULL(s.Name, 'Not Assigned') AS SubjectName
+    FROM UserProfiles up
+    INNER JOIN AspNetUsers u ON u.Id = up.UserId
+    LEFT JOIN Subjects s ON s.Id = up.SubjectId
+    WHERE up.UserId = @Id";
+
+            return _db.QueryFirstOrDefault<TeacherProfileViewModel>(
+                query,
+                new { Id = userId }
+            );
+        }
+        public bool UpdateTeacherSelfProfile(TeacherProfileViewModel model)
+        {
+            string query = @"
+    UPDATE UserProfiles
+    SET FullName = @Name,
+        PhoneNumber = @Phone
+    WHERE UserId = @Id";
+
+            int rows = _db.Execute(query, new
+            {
+                Name = model.FullName,
+                Phone = model.PhoneNumber,
+                Id = model.UserId
+            });
+
+            return rows > 0;
+        }
 
     }
 }

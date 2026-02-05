@@ -1,0 +1,15 @@
+﻿@model SchoolManegementNew.Models.TeacherProfileViewModel
+
+<button class="btn btn-primary mb-3" onclick="editTeacher('@Model.UserId')">Update Your Details</button>
+<div class="card shadow p-4">
+    
+    <h4 class="mb-3">Teacher Profile</h4>
+
+    <p><strong>Name:</strong> @Model.FullName</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+    <p><strong>Subject:</strong> @Model.SubjectName</p>
+</div>
+<script>
+ 
+</script>
