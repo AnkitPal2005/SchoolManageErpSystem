@@ -13,6 +13,6 @@ namespace SchoolManegementNew.Repositories
         void DeleteSubject(int id);
         List<Subject> GetFreeSubjects(string teacherId);
 
-
+        public List<SubjectListViewModel> GetAllSubject();
     }
 }

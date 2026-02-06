@@ -1,0 +1,32 @@
+﻿<h2>Assign Marks</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Roll Number</th>
+            <th>Subject</th>
+            <th>Marks</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="studentTable"></tbody>
+</table>
+<div id="marksModal"></div>
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            loadStudents();
+        });
+        function loadStudents(){
+            $("#studentTable").load("/Teacher/StudentMarksPartial");
+           
+        }
+        function openMarks(studentUserId){
+            // alert("Button Clicked");
+            $.get("/Teacher/AssignMarks",{studentUserId:studentUserId},function(res){
+                $("#marksModal").html(res);
+                
+            });
+        }
+    </script>
+}

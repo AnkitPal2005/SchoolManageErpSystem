@@ -1,0 +1,40 @@
+﻿@model SchoolManegementNew.Models.SimpleMarksViewModel
+
+<div class="modal fade show" style="display:block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Assign Marks To Students</h5>
+                <button class="btn btn-close" onclick="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="studentId" value="@Model.StudentUserId" />
+                <input class="form-control mb-2" id="marks" placeholder="Marks Obtained" value="@Model.MarksObtained" />
+                <input class="form-control" id="maxMarks" placeholder="Max Marks" value="@Model.MaxMarks" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-secondary" onclick="saveMarks()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function closeModal(){
+        $(".modal").remove();
+    }
+    function saveMarks(){
+        var data={
+            StudentUserId:$("#studentId").val(),
+            MarksObtained:$("#marks").val(),
+            MaxMarks:$("#maxMarks").val()
+        };
+        $.post("/Teacher/SaveMarks",data,function(res){
+            alert(res.message);
+            closeModal();
+            loadStudents();
+        })
+    }
+
+</script>

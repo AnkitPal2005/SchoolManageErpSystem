@@ -1,0 +1,38 @@
+﻿@model List<SchoolManegementNew.Models.StudentSimpleViewModel>
+@foreach(var s in Model)
+{
+    <tr>
+        <td>@s.FullName</td>
+        <td>@s.RollNumber</td>
+        <td>@s.SubjectName</td>
+        <td>
+            @if (s.MarksObtained == null)
+            {
+                <span class="text-muted">Not Assigned</span>
+            }
+            else
+            {
+                <strong>@s.MarksObtained / @s.MaxMarks</strong>
+            }
+        </td>
+
+        <td>
+            @if (s.MarksRowExists == null)
+            {
+                <button class="btn btn-sm btn-primary"
+                        onclick="openMarks('@s.StudentUserId')">
+                    Assign Marks
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-sm btn-warning"
+                        onclick="openMarks('@s.StudentUserId')">
+                    Update Marks
+                </button>
+            }
+        </td>
+
+
+    </tr>
+}
