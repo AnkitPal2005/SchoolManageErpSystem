@@ -61,6 +61,18 @@
                                 <a class="nav-link" href="/Teacher/Marks">Marks</a>
                             </li>
                         }
+                        @if (User.IsInRole("Student"))
+                        {
+                            @* <li class="nav-item">
+                                <a class="nav-link" href="/Student/Da">Dashboard</a>
+                            </li> *@
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Student/Profile">MyProfile</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Student/Marks">My Marks</a>
+                            </li>
+                        }
                         @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>

@@ -1,0 +1,22 @@
+﻿<h2>Welcome to your Profile</h2>
+<div id="profileContainer"></div>
+<div id="modalContainer"></div>
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            loadProfile();
+        });
+        function loadProfile(){
+            $("#profileContainer").load("/Student/StudentProfileCard");
+        }
+        $(function(){
+            loadProfile();
+        });
+        function editStudent(id){
+            $.get("/Student/EditProfile",{id:id},function(res){
+                $("#modalContainer").html(res);
+                loadProfile();
+            })
+        }
+    </script>
+}

@@ -191,5 +191,42 @@ namespace SchoolManegementNew.Repositories
             _db.Execute("DELETE FROM UserProfiles WHERE UserId = @Id", new { Id = userId });
             _db.Execute("DELETE FROM AspNetUsers WHERE Id = @Id", new { Id = userId });
         }
+        public bool UpdateStudentSelfProfile(StudentListViewModel model)
+        {
+            string query = @"
+                UPDATE UserProfiles
+                SET FullName = @Name,
+                    PhoneNumber = @Phone
+                WHERE UserId = @Id";
+
+            int rows = _db.Execute(query, new
+            {
+                Name = model.FullName,
+                Phone = model.PhoneNumber,
+                Id = model.UserId
+            });
+
+            return rows > 0;
+        }
+        public List<StudentSimpleViewModel> GetStudentMarks(string studentUserId)
+        {
+            string query = @"
+        SELECT 
+            up.FullName,
+            up.RollNumber,
+            s.Name AS SubjectName,
+            m.MarksObtained,
+            m.MaxMarks
+        FROM IntermediateStudentTable m
+        INNER JOIN Subjects s ON s.Id = m.SubjectId
+        INNER JOIN UserProfiles up ON up.UserId = m.StudentUserId
+        WHERE m.StudentUserId = @StudentUserId";
+
+            return _db.Query<StudentSimpleViewModel>(
+                query,
+                new { StudentUserId = studentUserId }
+            ).ToList();
+        }
+
     }
 }

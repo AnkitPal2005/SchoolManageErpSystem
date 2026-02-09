@@ -1,0 +1,40 @@
+﻿@model SchoolManegementNew.Models.StudentListViewModel
+<div class="modal fade show" style="display:block">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5>Edit Your Profile</h5>
+                <button class="btn-close" onclick="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="userId" value="@Model.UserId" />
+                <input class="form-control mb-3" id="name" value="@Model.FullName" />
+                <input class="form-control mb-3" id="phone" value="@Model.PhoneNumber" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-success" onclick="updateProfile()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function closeModal(){
+        $(".modal").remove();
+    }
+    function updateProfile(){
+        var data={
+            UserId:$("#userId").val(),
+            FullName:$("#name").val(),
+            PhoneNumber:$("#phone").val()
+        };
+        $.post("/Student/UpdateProfile",data,function(res){
+            alert(res.message);
+            if(res.success){
+                closeModal();
+                loadProfile();
+            }
+        })
+    }
+
+</script>

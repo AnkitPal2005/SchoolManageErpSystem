@@ -147,7 +147,7 @@ namespace SchoolManegementNew.Areas.Identity.Pages.Account
                         return RedirectToAction("Dashboard", "Teacher");
 
                     if (Input.Role == "Student")
-                        return RedirectToAction("Dashboard", "Student");
+                        return RedirectToAction("Profile", "Student");
 
                     return LocalRedirect(returnUrl);
                 }

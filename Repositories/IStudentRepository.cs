@@ -8,5 +8,7 @@ namespace SchoolManegementNew.Repositories
         void DeleteStudent(string UserId);
         StudentListViewModel GetStudentByUserId(string UserId);
         public void UpdateStudent(StudentListViewModel model);
+        public bool UpdateStudentSelfProfile(StudentListViewModel model);
+        public List<StudentSimpleViewModel> GetStudentMarks(string studentUserId);
     }
 }
