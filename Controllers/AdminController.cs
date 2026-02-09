@@ -315,12 +315,17 @@
 //    }
 //}
 
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SchoolManegementNew.Models;
 using SchoolManegementNew.Repositories;
-
+using SchoolManegementNew.Services.Reports;
+using System.IO;
 namespace SchoolManegementNew.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -337,6 +342,7 @@ namespace SchoolManegementNew.Controllers
         private readonly IUserRepository _userRepo;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IPdfReportService _pdfReportService;
 
         public AdminController(
             IDashboardRepository dashboardRepo,
@@ -345,7 +351,7 @@ namespace SchoolManegementNew.Controllers
             ISubjectRepository subjectRepo,
             RoleManager<IdentityRole> roleManager,
             UserManager<IdentityUser> userManager,
-            IUserRepository userRepo)
+            IUserRepository userRepo, IPdfReportService pdfReportService)
         {
             _dashboardRepo = dashboardRepo;
             _teacherRepo = teacherRepo;
@@ -354,6 +360,14 @@ namespace SchoolManegementNew.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _userRepo = userRepo;
+            _pdfReportService = pdfReportService;
+        }
+
+        //Export PDF
+        public IActionResult ExportFullReportPdf()
+        {
+            byte[] pdfBytes = _pdfReportService.GenerateAdminFullReport();
+            return File(pdfBytes, "application/pdf", "Admin_Full_Report.pdf");
         }
 
         // =========================

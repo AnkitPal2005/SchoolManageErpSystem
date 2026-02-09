@@ -63,9 +63,6 @@
                         }
                         @if (User.IsInRole("Student"))
                         {
-                            @* <li class="nav-item">
-                                <a class="nav-link" href="/Student/Da">Dashboard</a>
-                            </li> *@
                             <li class="nav-item">
                                 <a class="nav-link" href="/Student/Profile">MyProfile</a>
                             </li>
@@ -73,12 +70,7 @@
                                 <a class="nav-link" href="/Student/Marks">My Marks</a>
                             </li>
                         }
-                        @* <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li> *@
+                        
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -103,3 +95,156 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+@* <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - School Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- 🔥 INTERNAL CSS ONLY -->
+    <style>
+        body {
+            margin: 0;
+            background-color: #f4f6fb;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .admin-wrapper {
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #4f46e5, #4338ca);
+            color: #fff;
+            position: fixed;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+            .sidebar-menu li a {
+                display: block;
+                padding: 12px 20px;
+                color: #e0e7ff;
+                text-decoration: none;
+                font-size: 15px;
+            }
+
+                .sidebar-menu li a i {
+                    margin-right: 10px;
+                }
+
+                .sidebar-menu li a:hover {
+                    background-color: rgba(255,255,255,0.15);
+                    color: #fff;
+                }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+        }
+
+        /* TOP BAR */
+        .topbar {
+            height: 60px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .content-area {
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-wrapper">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h4 class="mb-1">School MS</h4>
+                <span class="badge bg-light text-dark">Admin</span>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li>
+                    <a asp-controller="Admin" asp-action="Dashboard">
+                        <i class="fa-solid fa-chart-line"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Admin" asp-action="Teachers">
+                        <i class="fa-solid fa-chalkboard-user"></i> Teachers
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Admin" asp-action="Students">
+                        <i class="fa-solid fa-user-graduate"></i> Students
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Admin" asp-action="Subjects">
+                        <i class="fa-solid fa-book"></i> Subjects
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Admin" asp-action="Users">
+                        <i class="fa-solid fa-users"></i> All Users
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+
+            <!-- TOP BAR -->
+            <nav class="topbar">
+                <h6 class="mb-0">@ViewData["Title"]</h6>
+                <div>
+                    <partial name="_LoginPartial" />
+                </div>
+            </nav>
+
+            <!-- PAGE CONTENT -->
+            <div class="content-area">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html> *@

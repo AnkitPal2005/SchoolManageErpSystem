@@ -1,4 +1,7 @@
 ﻿@model DashboardViewModel
+@* @{
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+} *@
 
 <i>
     <h3 style="color:blue">Admin Dashboard</h3>
@@ -51,6 +54,15 @@
         <h2 id="subjectCount"></h2>
     </div>
 </div>
+    <div class="col-md-4">
+        <div class="card p-3 shadow">
+            <h5>Export PDF</h5>
+            <a href="/Admin/ExportFullReportPdf" class="btn btn-success">
+                <i class="fa fa-file-pdf"></i> Export PDF
+            </a>
+        </div>
+    </div>
+
 </div>
 <script>
     function GetDashboardCount(){

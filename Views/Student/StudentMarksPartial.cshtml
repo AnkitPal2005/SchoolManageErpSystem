@@ -1,9 +1,19 @@
 ﻿@model List<SchoolManegementNew.Models.StudentSimpleViewModel>
+@{
+    int sum = 0;
+    int count = 0;
+}
+
 @foreach (var s in Model)
 {
+
+   
+        sum = sum + s.MarksObtained;
+    count++;
+
     <tr>
-        <td>@s.FullName</td>
-        <td>@s.RollNumber</td>
+        @* <td>@s.FullName</td>
+        <td>@s.RollNumber</td> *@
         <td>@s.SubjectName</td>
         <td>
             @if (s.MarksObtained == null)
@@ -15,6 +25,7 @@
                 <strong>@s.MarksObtained / @s.MaxMarks</strong>
             }
         </td>
+     
 
         @* <td>
             @if (s.MarksRowExists == null)
@@ -35,4 +46,22 @@
 
 
     </tr>
+ 
 }
+@{
+    double percentage = 0;
+
+    if (sum > 0)
+    {
+        percentage =  (count*100)/(double)sum * 100;
+    }
+}
+<tr class="fw-bold bg-light">
+    <td>Total Marks</td>
+    <td>@sum</td>
+</tr>
+<tr class="fw-bold bg-light">
+    <td>Percentage</td>
+    <td>@percentage.ToString("0.00") %</td>
+</tr>
+

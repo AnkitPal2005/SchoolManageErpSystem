@@ -3,6 +3,8 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SchoolManegementNew.Data;
 using SchoolManegementNew.Repositories;
+using SchoolManegementNew.Repositories.Reports;
+using SchoolManegementNew.Services.Reports;
 using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +28,8 @@ builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IAdminReportRepository, AdminRepository>();
+builder.Services.AddScoped<IPdfReportService, PdfReportService>();
 
 var app = builder.Build();
 
