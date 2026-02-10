@@ -315,6 +315,8 @@
 //    }
 //}
 
+//using DinkToPdf;
+//using DinkToPdf.Contracts;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
@@ -323,9 +325,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SchoolManegementNew.Models;
+using SchoolManegementNew.Models.Reports;
 using SchoolManegementNew.Repositories;
+using SchoolManegementNew.Repositories.Reports;
+using SchoolManegementNew.Services;
 using SchoolManegementNew.Services.Reports;
 using System.IO;
+using Microsoft.Playwright;
 namespace SchoolManegementNew.Controllers
 {
     [Authorize(Roles = "Admin")]
@@ -342,16 +348,19 @@ namespace SchoolManegementNew.Controllers
         private readonly IUserRepository _userRepo;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IPdfReportService _pdfReportService;
+        private readonly IAdminReportRepository _reportRepo;
+        private readonly IReportExportService _reportExportService;
+        private readonly RazorViewRenderer _razorViewRenderer;
 
         public AdminController(
+            
             IDashboardRepository dashboardRepo,
             ITeacherRepository teacherRepo,
             IStudentRepository studentRepo,
             ISubjectRepository subjectRepo,
             RoleManager<IdentityRole> roleManager,
             UserManager<IdentityUser> userManager,
-            IUserRepository userRepo, IPdfReportService pdfReportService)
+            IUserRepository userRepo, IAdminReportRepository reportRepo, RazorViewRenderer razorViewRenderer,IReportExportService reportExportService)
         {
             _dashboardRepo = dashboardRepo;
             _teacherRepo = teacherRepo;
@@ -360,15 +369,61 @@ namespace SchoolManegementNew.Controllers
             _roleManager = roleManager;
             _userManager = userManager;
             _userRepo = userRepo;
-            _pdfReportService = pdfReportService;
+            _reportRepo = reportRepo;
+           _reportExportService = reportExportService;
+            _razorViewRenderer = razorViewRenderer;
         }
 
         //Export PDF
-        public IActionResult ExportFullReportPdf()
+    
+
+public async Task<IActionResult> ExportFullReportPdf()
+    {
+            var model = new AdminFullReportVm
+            {
+                Summary = _reportRepo.GetSummary(),
+                Teachers = _reportRepo.GetTeachers(),
+                Students = _reportRepo.GetStudents(),
+                Users = _reportRepo.GetUsers(),
+             
+                ReportDate = DateTime.Now,
+                AcademicYear = "2025-26",
+                ReportRef = "SCH-RPT-" + DateTime.Now.ToString("yyyyMMdd")
+            };
+
+        string html = _razorViewRenderer.RenderToString(
+            ControllerContext,
+            "SchoolReport",
+            model
+        );
+
+        using var playwright = await Playwright.CreateAsync();
+        await using var browser = await playwright.Chromium.LaunchAsync(
+            new BrowserTypeLaunchOptions { Headless = true });
+
+        var page = await browser.NewPageAsync();
+        await page.SetContentAsync(html);
+
+        byte[] pdf = await page.PdfAsync(new PagePdfOptions
         {
-            byte[] pdfBytes = _pdfReportService.GenerateAdminFullReport();
-            return File(pdfBytes, "application/pdf", "Admin_Full_Report.pdf");
+            Format = "A4",
+            PrintBackground = true
+        });
+
+        return File(pdf, "application/pdf", "SchoolReport.pdf");
+    }
+
+        public IActionResult ExportFullReportExcel()
+        {
+            var fileBytes = _reportExportService.GenerateExcelReport();
+
+            return File(
+                fileBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "SchoolManagementReport.xlsx"
+            );
         }
+
 
         // =========================
         // DASHBOARD
@@ -482,6 +537,26 @@ namespace SchoolManegementNew.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
+        }
+        [HttpGet]
+        public IActionResult LoadStudentsBySearch(string? search)
+        {
+            // Repository se data laao (StudentReportDto format mein)
+            var reportData = _reportRepo.GetStudentsBySearch(search);
+
+            // StudentReportDto ko StudentListViewModel mein convert karo
+            var students = reportData.Select(s => new StudentListViewModel
+            {
+                UserId = s.UserId,
+                FullName = s.FullName,  // Ya jo bhi property name hai reportData mein
+                Email = s.Email,
+                PhoneNumber = s.PhoneNumber,
+                RollNumber = s.RollNumber,
+                Marks = s.Marks,
+                TotalSubjects = s.TotalSubjects
+            }).ToList();
+
+            return PartialView("LoadStudents", students);
         }
 
         [HttpPost]

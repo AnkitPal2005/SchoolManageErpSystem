@@ -1,12 +1,14 @@
+//using DinkToPdf;
+//using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SchoolManegementNew.Data;
 using SchoolManegementNew.Repositories;
 using SchoolManegementNew.Repositories.Reports;
+using SchoolManegementNew.Services;
 using SchoolManegementNew.Services.Reports;
 using System.Data;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -29,7 +31,9 @@ builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IAdminReportRepository, AdminRepository>();
-builder.Services.AddScoped<IPdfReportService, PdfReportService>();
+builder.Services.AddScoped<IReportExportService, ReportExportService>();
+
+builder.Services.AddScoped<RazorViewRenderer>();
 
 var app = builder.Build();
 

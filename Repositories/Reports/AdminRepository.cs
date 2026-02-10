@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using iText.StyledXmlParser.Jsoup.Select;
 using Microsoft.Identity.Client;
+using SchoolManegementNew.Models;
 using SchoolManegementNew.Models.Reports;
 using System.Data;
 
@@ -104,6 +105,56 @@ namespace SchoolManegementNew.Repositories.Reports
                 throw;
             }
         }
+        public List<StudentMarksReportDto> GetStudentMarks()
+        {
+            string query = @"
+                SELECT
+                    up.RollNumber,
+                    up.FullName AS StudentName,
+                    s.Name AS SubjectName,
+                    ist.MarksObtained,
+                    ist.MaxMarks
+                FROM IntermediateStudentTable ist
+                INNER JOIN UserProfiles up 
+                    ON up.UserId = ist.StudentUserId
+                INNER JOIN Subjects s 
+                    ON s.Id = ist.SubjectId
+                ORDER BY up.RollNumber, s.Name
+            ";
 
+
+            return _db.Query<StudentMarksReportDto>(query).ToList();
+        }
+        public List<StudentListViewModel> GetStudentsBySearch(string? search)
+        {
+            string query = @"
+SELECT 
+    u.Id AS UserId,
+    up.RollNumber,
+    u.Email,
+    up.FullName,
+    u.PhoneNumber,
+    ISNULL(SUM(ist.MarksObtained), 0) AS Marks,
+    COUNT(ist.SubjectId) AS TotalSubjects
+FROM UserProfiles up
+INNER JOIN AspNetUsers u
+    ON u.Id = up.UserId
+LEFT JOIN IntermediateStudentTable ist
+    ON ist.StudentUserId = up.UserId
+WHERE up.UserType = 'Student'
+    AND (
+        @Search IS NULL
+        OR up.FullName LIKE '%' + @Search + '%'
+        OR u.Email LIKE '%' + @Search + '%'
+        OR up.RollNumber LIKE '%' + @Search + '%'
+    )
+GROUP BY u.Id, up.RollNumber, u.Email, up.FullName, u.PhoneNumber
+ORDER BY up.RollNumber";
+
+            return _db.Query<StudentListViewModel>(
+                query,
+                new { Search = search }
+            ).ToList();
+        }
     }
 }

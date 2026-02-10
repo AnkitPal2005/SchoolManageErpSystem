@@ -1,4 +1,8 @@
 ﻿<h3>All Students</h3>
+<input type="text" id="studentSearch"
+       placeholder="Search by name or email"
+       style="margin-bottom:10px; padding:6px; width:250px;" />
+
 <div id="studentContainer">
     Loading....
 </div>
@@ -8,12 +12,20 @@
         LoadStudents();
     });
 
-    function LoadStudents() {
-        $.post("/Admin/LoadStudents", function (res) {
+    function LoadStudents(searchText="") {
+        $.get("/Admin/LoadStudentsBySearch",{search:searchText}, function (res) {
             $("#studentContainer").html(res);
         });
     }
+    let searchTimer=null;
+    $("#studentSearch").on("keyup",function(){
+        clearTimeout(searchTimer);
+        let text=$(this).val();
+        searchTimer=setTimeout(function(){
+            LoadStudents(text);
 
+        },400);
+    });
     function deleteStudent(id) {
         
         if (confirm("Are you sure to delete this user?")) {

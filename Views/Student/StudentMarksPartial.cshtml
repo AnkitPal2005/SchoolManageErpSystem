@@ -53,7 +53,7 @@
 
     if (sum > 0)
     {
-        percentage =  (count*100)/(double)sum * 100;
+        percentage = (double)sum / count;
     }
 }
 <tr class="fw-bold bg-light">
@@ -62,6 +62,6 @@
 </tr>
 <tr class="fw-bold bg-light">
     <td>Percentage</td>
-    <td>@percentage.ToString("0.00") %</td>
+    <td>@percentage%</td>
 </tr>
 

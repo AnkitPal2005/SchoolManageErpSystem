@@ -10,5 +10,6 @@ namespace SchoolManegementNew.Repositories
         public void UpdateStudent(StudentListViewModel model);
         public bool UpdateStudentSelfProfile(StudentListViewModel model);
         public List<StudentSimpleViewModel> GetStudentMarks(string studentUserId);
+       
     }
 }
