@@ -457,19 +457,27 @@ public async Task<IActionResult> ExportFullReportPdf()
             return View();
         }
 
-        [HttpPost]
-        public IActionResult LoadTeachers()
+        //[HttpPost]
+        //public IActionResult LoadTeachers()
+        //{
+        //    try
+        //    {
+        //        var data = _teacherRepo.GetAllTeachers();
+        //        return PartialView(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
+        [HttpGet]
+        public async Task<IActionResult> LoadTeachers(string? search, int page = 1, int pageSize = 5)
         {
-            try
-            {
-                var data = _teacherRepo.GetAllTeachers();
-                return PartialView(data);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
+            var result = await _teacherRepo.GetTeachersPagedAsync(page, pageSize, search);
+
+            return PartialView("LoadTeachers", result);
         }
+
 
         [HttpPost]
         public IActionResult DeleteTeacher(string id)
@@ -525,39 +533,49 @@ public async Task<IActionResult> ExportFullReportPdf()
             return View();
         }
 
-        [HttpPost]
-        public IActionResult LoadStudents()
-        {
-            try
-            {
-                var data = _studentRepo.GetAllStudents();
-                return PartialView(data);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
+        //[HttpPost]
+        //public IActionResult LoadStudents()
+        //{
+        //    try
+        //    {
+        //        var data = _studentRepo.GetAllStudents();
+        //        return PartialView(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
+        //[HttpGet]
+        //public IActionResult LoadStudentsBySearch(string? search)
+        //{
+
+        //    var reportData = _reportRepo.GetStudentsBySearch(search);
+
+
+        //    var students = reportData.Select(s => new StudentListViewModel
+        //    {
+        //        UserId = s.UserId,
+        //        FullName = s.FullName,  
+        //        Email = s.Email,
+        //        PhoneNumber = s.PhoneNumber,
+        //        RollNumber = s.RollNumber,
+        //        Marks = s.Marks,
+        //        TotalSubjects = s.TotalSubjects
+        //    }).ToList();
+
+        //    return PartialView("LoadStudents", students);
+        //}
         [HttpGet]
-        public IActionResult LoadStudentsBySearch(string? search)
+        public async Task<IActionResult> LoadStudentsBySearch(string? search, int page = 1,int pageSize=5)
         {
-            // Repository se data laao (StudentReportDto format mein)
-            var reportData = _reportRepo.GetStudentsBySearch(search);
+           
 
-            // StudentReportDto ko StudentListViewModel mein convert karo
-            var students = reportData.Select(s => new StudentListViewModel
-            {
-                UserId = s.UserId,
-                FullName = s.FullName,  // Ya jo bhi property name hai reportData mein
-                Email = s.Email,
-                PhoneNumber = s.PhoneNumber,
-                RollNumber = s.RollNumber,
-                Marks = s.Marks,
-                TotalSubjects = s.TotalSubjects
-            }).ToList();
+            var result = await _reportRepo.GetStudentsPagedAsync(page, pageSize, search);
 
-            return PartialView("LoadStudents", students);
+            return PartialView("LoadStudents", result);
         }
+
 
         [HttpPost]
         public IActionResult DeleteStudent(string id)
@@ -607,20 +625,26 @@ public async Task<IActionResult> ExportFullReportPdf()
             return View();
         }
 
+        //[HttpGet]
+        //public IActionResult LoadSubjects()
+        //{
+        //    try
+        //    {
+        //        var data = _subjectRepo.GetAllSubject();
+        //        return PartialView("LoadSubjects", data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = ex.Message });
+        //    }
+        //}
         [HttpGet]
-        public IActionResult LoadSubjects()
+        public async Task<IActionResult> LoadSubjects(string? search, int page = 1, int pageSize = 5)
         {
-            try
-            {
-                var data = _subjectRepo.GetAllSubject();
-                return PartialView("LoadSubjects", data);
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
-            }
-        }
+            var result = await _subjectRepo.GetSubjectsPagedAsync(page, pageSize, search);
 
+            return PartialView("LoadSubjects", result);
+        }
         [HttpGet]
         public IActionResult AddSubjects()
         {
@@ -694,8 +718,13 @@ public async Task<IActionResult> ExportFullReportPdf()
         // =========================
 
         [HttpGet]
-        public IActionResult Users()
+        public async Task<IActionResult> Users()
         {
+            
+            var roles = await _userRepo.GetAllRolesAsync();
+            var subjects = await _userRepo.GetAllSubjectsAsync();
+            ViewBag.Subjects = subjects;
+            ViewBag.Roles = roles;
             return View();
         }
 
@@ -750,12 +779,12 @@ public async Task<IActionResult> ExportFullReportPdf()
             }
         }
 
-        [HttpPost]
-        public IActionResult LoadUsers()
+        [HttpGet]
+        public async Task<IActionResult> LoadUsers(string? search,string?role=null,int page = 1, int pageSize = 5,int?subjectId=null)
         {
             try
             {
-                var data = _userRepo.GetAllUsers();
+                var data = await _userRepo.GetUserPagedAsync(page,pageSize,search,role,subjectId);
                 return PartialView(data);
             }
             catch (Exception ex)

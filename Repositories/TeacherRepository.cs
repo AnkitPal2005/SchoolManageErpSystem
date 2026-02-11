@@ -213,6 +213,7 @@
 //    }
 //}
 using Dapper;
+using DocumentFormat.OpenXml.Wordprocessing;
 using SchoolManegementNew.Models;
 using System.Collections.Generic;
 using System.Data;
@@ -480,5 +481,61 @@ namespace SchoolManegementNew.Repositories
 
             return data;
         }
+        public async Task<PaginationViewModel<TeacherListViewModel>> GetTeachersPagedAsync(int pageNumber, int pageSize, string? search)
+
+        {
+            var offset = (pageNumber - 1) * pageSize;
+            var query = @"
+SELECT COUNT(*)
+FROM UserProfiles up
+INNER JOIN AspNetUsers u ON u.Id = up.UserId
+LEFT JOIN Subjects s ON s.Id = up.SubjectId
+WHERE up.UserType = 'Teacher'
+AND (
+    @Search IS NULL
+    OR up.FullName LIKE '%' + @Search + '%'
+    OR u.Email LIKE '%' + @Search + '%'
+    OR s.Name LIKE '%' + @Search + '%'
+);
+
+SELECT 
+    up.UserId,
+    up.FullName,
+    u.Email,
+    up.PhoneNumber,
+    up.SubjectId,
+    s.Name AS SubjectName
+FROM UserProfiles up
+INNER JOIN AspNetUsers u ON u.Id = up.UserId
+LEFT JOIN Subjects s ON s.Id = up.SubjectId
+WHERE up.UserType = 'Teacher'
+AND (
+    @Search IS NULL
+    OR up.FullName LIKE '%' + @Search + '%'
+    OR u.Email LIKE '%' + @Search + '%'
+    OR s.Name LIKE '%' + @Search + '%'
+)
+ORDER BY up.FullName
+OFFSET @Offset ROWS
+FETCH NEXT @PageSize ROWS ONLY;
+";
+            using var multi = await _db.QueryMultipleAsync(query, new
+            {
+                Offset = offset,
+                PageSize = pageSize,
+                Search = search
+            });
+            var totalCount=await multi.ReadFirstAsync<int>();
+            var teachers = await multi.ReadAsync<TeacherListViewModel>();
+            return new PaginationViewModel<TeacherListViewModel>
+            {
+                Items = teachers,
+                TotalCount = totalCount,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+            };
+        }
+
     }
 }

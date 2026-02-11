@@ -1,5 +1,8 @@
 ﻿<h3>All Subjects</h3>
 <button class="btn btn-primary mb-3" onclick="openAddSubject()">Add Subject</button>
+<input type="text" id="subjectSearch"
+       placeholder="Search by Subject Name"
+       style="margin-bottom:10px; padding:6px; width:250px;" />
 <div id="subjectContainer">
     Loading......
 </div>
@@ -10,11 +13,16 @@
         LoadSubjects();
     });
 
-    function LoadSubjects(){
-        $.get("/Admin/LoadSubjects",function(res){
+    function LoadSubjects(searchText="",page=1){
+        let currentPageSize=$("#pageSize").val()||3
+        $.get("/Admin/LoadSubjects",{search:searchText,page:page,pageSize:currentPageSize},function(res){
             $("#subjectContainer").html(res);
         });
     }
+     $("#subjectSearch").on("keyup",function(){
+        let text=$(this).val();
+        LoadSubjects(text,1);
+    })
     function openAddSubject(){
         $.get("/Admin/AddSubjects",function(res){
             console.log(res);
@@ -25,7 +33,7 @@
         $.get("/Admin/EditSubject",{ id: id },function(res){
             console.log(res);
             $("#modalContainer").html(res);
-            LoadSubjects();
+            LoadSubjects(text,1);
             
         })
     }

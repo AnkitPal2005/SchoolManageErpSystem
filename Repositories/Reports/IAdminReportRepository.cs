@@ -1,5 +1,6 @@
 ﻿using SchoolManegementNew.Models;
 using SchoolManegementNew.Models.Reports;
+
 namespace SchoolManegementNew.Repositories.Reports
 {
     public interface IAdminReportRepository
@@ -9,10 +10,10 @@ namespace SchoolManegementNew.Repositories.Reports
         List<StudentReportDto> GetStudents();
         List<UserReportDto> GetUsers();
         List<StudentMarksReportDto> GetStudentMarks();
-        public List<StudentListViewModel> GetStudentsBySearch(string? search,
-    int pageNumber,
-    int pageSize,
-    out int totalRecords);
+        public List<StudentListViewModel> GetStudentsBySearch(string? search);
+        Task<PaginationViewModel<StudentListViewModel>>
+ GetStudentsPagedAsync(int pageNumber, int pageSize, string? search);
 
+        //public async Task<PaginationViewModel<StudentListViewModel>> GetStudentsPagedAsync(int pageNumber, int pageSize, string search);
     }
 }

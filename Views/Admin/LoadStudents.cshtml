@@ -1,4 +1,27 @@
-﻿@model List<StudentListViewModel>
+﻿@* @model List<StudentListViewModel> *@
+@* @model PaginationViewModel<StudentViewModel> *@
+@model PaginationViewModel<StudentListViewModel>
+<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+    <div>
+        Total Records: @Model.TotalCount
+    </div>
+
+    <div>
+        Show
+      
+        <select id="pageSize" onchange="currentPageSize=this.value; LoadStudents($('#studentSearch').val(),1)" class="btn btn-warning">
+          
+            <option value="3" selected="@(Model.PageSize == 3)" class="btn btn-success">3</option>
+            <option value="5" selected="@(Model.PageSize==5)" class="btn btn-danger">5</option>
+            <option value="10" selected="@(Model.PageSize==10)" class="btn btn-dark">10</option>
+            <option value="20" selected="@(Model.PageSize==20)" class="btn btn-primary">20</option>
+            <option value="50" selected="@(Model.PageSize == 50)" class="btn btn-primary">50</option>
+        </select>
+        entries
+    </div>
+</div>
+
+
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -10,7 +33,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var s in Model)
+        @foreach (var s in Model.Items)
         {
             <tr>
                 <td>@s.FullName</td>
@@ -25,3 +48,17 @@
         }
     </tbody>
 </table>
+<nav>
+    <ul class="pagination">
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                <a href="javascript:void(0);"
+                   class="page-link"
+                   onclick="LoadStudents($('#studentSearch').val(), @i)">
+                    @i
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

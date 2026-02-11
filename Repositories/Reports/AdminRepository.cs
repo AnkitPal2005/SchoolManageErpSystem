@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using iText.StyledXmlParser.Jsoup.Select;
 using Microsoft.Identity.Client;
+using Newtonsoft.Json.Schema;
 using SchoolManegementNew.Models;
 using SchoolManegementNew.Models.Reports;
 using System.Data;
@@ -156,5 +157,66 @@ ORDER BY up.RollNumber";
                 new { Search = search }
             ).ToList();
         }
+        public async Task<PaginationViewModel<StudentListViewModel>>
+ GetStudentsPagedAsync(int pageNumber, int pageSize, string? search)
+        {
+            var offset = (pageNumber - 1) * pageSize;
+
+            var query = @"
+    SELECT COUNT(*)
+    FROM UserProfiles up
+    INNER JOIN AspNetUsers u ON u.Id = up.UserId
+    WHERE up.UserType = 'Student'
+    AND (
+        @Search IS NULL
+        OR up.FullName LIKE '%' + @Search + '%'
+        OR u.Email LIKE '%' + @Search + '%'
+        OR up.RollNumber LIKE '%' + @Search + '%'
+    );
+
+    SELECT 
+        u.Id AS UserId,
+        up.FullName,
+        u.Email,
+        u.PhoneNumber,
+        up.RollNumber,
+        ISNULL(SUM(ist.MarksObtained),0) AS Marks,
+        COUNT(ist.SubjectId) AS TotalSubjects
+    FROM UserProfiles up
+    INNER JOIN AspNetUsers u ON u.Id = up.UserId
+    LEFT JOIN IntermediateStudentTable ist 
+        ON ist.StudentUserId = up.UserId
+    WHERE up.UserType = 'Student'
+    AND (
+        @Search IS NULL
+        OR up.FullName LIKE '%' + @Search + '%'
+        OR u.Email LIKE '%' + @Search + '%'
+        OR up.RollNumber LIKE '%' + @Search + '%'
+    )
+    GROUP BY u.Id, up.FullName, u.Email, u.PhoneNumber, up.RollNumber
+    ORDER BY up.RollNumber
+    OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
+    ";
+
+            using var multi = await _db.QueryMultipleAsync(query, new
+            {
+                Offset = offset,
+                PageSize = pageSize,
+                Search = search
+            });
+
+            var totalCount = await multi.ReadFirstAsync<int>();
+            var students = await multi.ReadAsync<StudentListViewModel>();
+
+            return new PaginationViewModel<StudentListViewModel>
+            {
+                Items = students,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+            };
+        }
+
     }
 }

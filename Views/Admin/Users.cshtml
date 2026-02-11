@@ -1,4 +1,73 @@
-﻿<h3>All Users</h3>
+﻿
+
+<h3>All Users</h3>
+@* <input type="text" id="userSearch"
+       placeholder="Search by name"
+       style="margin-bottom:10px;padding:6px;width:250px;" /> *@
+<div class="row g-2 align-items-end mb-3">
+
+    <!-- Search Box -->
+    <div class="col-md-3">
+        <label class="form-label">Search</label>
+        <input type="text" id="userSearch"
+               class="form-control"
+               placeholder="Search by name, email..." />
+    </div>
+
+    <!-- Role Dropdown -->
+    <div class="col-md-2">
+        <label class="form-label">Role</label>
+        <select id="roleFilter" class="form-select">
+            <option value="">All Roles</option>
+
+            @foreach (var r in ViewBag.Roles)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+    </div>
+        <div class="col-md-2">
+            <label class="form-label">Subject</label>
+            <select id="subjectFilter" class="form-select">
+                <option value="">All Subjects</option>
+
+                @foreach (var s in ViewBag.Subjects)
+                {
+                    <option value="@s.Id">@s.Name</option>
+                }
+            </select>
+        </div>
+
+            
+        
+  
+
+    <!-- Page Size Dropdown -->
+    <div class="col-md-2">
+        <label class="form-label">Entries</label>
+        <select id="pageSize" class="form-select">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+
+    <!-- Search Button -->
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100"
+                onclick="applyFilters()">
+            Search
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100"
+                onclick="RemoveFilters()">
+            Reset
+        </button>
+    </div>
+</div>
+
 <button class="btn btn-primary mb-3" onclick="openAddUser()">Add User</button>
 <div id="userContainer">UserList.....</div>
 <div id="modalContainer"></div>
@@ -10,18 +79,31 @@
     $(document).ready(function(){
          loadUsers();
      });
-     function LoadTeachers(){
-         loadUsers();
-     }
-     function LoadStudents(){
-         loadUsers();
-     }
-    function loadUsers(){
-        $.post("/Admin/LoadUsers",function(res){
+     // function LoadTeachers(){
+     //     loadUsers();
+     // }
+     // function LoadStudents(){
+     //     loadUsers();
+     // }
+    function loadUsers(searchText="",page=1){
+        let subjectId = $("#subjectFilter").val();
+         let role = $("#roleFilter").val();
+        let pageSize=$("#pageSize").val()||5;
+        $.get("/Admin/LoadUsers",{search:searchText,page:page,pageSize:pageSize,role:role,subjectId:subjectId},function(res){
             
             $("#userContainer").html(res);
         })
     }
+       $("#userSearch").on("keyup",function(){
+        let text=$(this).val();
+        loadUsers(text,1);
+    })
+    // function LoadTeachers(searchText="",page=1) {
+    //     let pageSize=$("#pageSize").val()||5;
+    //     $.get("/Admin/LoadTeachers",{search:searchText,page:page,pageSize:pageSize}, function (res) {
+    //         $("#teacherContainer").html(res);
+    //     });
+    // }
     function openAddUser(){
         loadUsers();
         $.get("/Admin/AddUser",function(res){
@@ -35,7 +117,8 @@
                 $("#modalContainer").html(res);
                 
    
-               LoadTeachers();
+               // LoadTeachers();
+               loadUsers(text,1);
              
             })
         }
@@ -44,7 +127,8 @@
                     $("#modalContainer").html(res);
                     // closeModal();
                 // LoadTeachers();
-                LoadStudents();
+                // LoadStudents();
+                loadUsers(text,1);
                 })
             }
             // else{
@@ -74,6 +158,32 @@
             });
         }
     }
+        function applyFilters(page = 1) {
+
+        let search = $("#userSearch").val();
+        let role = $("#roleFilter").val();
+        let pageSize = $("#pageSize").val();
+        let subjectId = $("#subjectFilter").val();
+        $.get("/Admin/LoadUsers",
+            {
+                search: search,
+                role: role,
+                page: page,
+                pageSize: pageSize,
+                subjectId:subjectId
+            },
+            function (res) {
+                $("#userContainer").html(res);
+            });
+    }
+    function RemoveFilters(){
+        $("userSearch").val("");
+        role = $("#roleFilter").val("");
+          $("pageSize").val("5");
+            subjectId=$("#subjectFilter").val("");
+           applyFilters(1);
+    }
+
 </script>
 
     

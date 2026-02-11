@@ -1,4 +1,6 @@
 ﻿<h3>All Students</h3>
+@* <input type="hidden" id="hiddenTotalCount" value="Model.TotalCount" /> *@
+
 <input type="text" id="studentSearch"
        placeholder="Search by name or email"
        style="margin-bottom:10px; padding:6px; width:250px;" />
@@ -8,24 +10,37 @@
 </div>
 <div id="modalContainer"></div>
 <script>
+    let currentPageSize = $("#pageSize").val() || 3;
+
     $(function () {
         LoadStudents();
     });
 
-    function LoadStudents(searchText="") {
-        $.get("/Admin/LoadStudentsBySearch",{search:searchText}, function (res) {
+    function LoadStudents(searchText="", page=1) {
+        let pageSize = $("#pageSize").val() || 3;
+        $.get("/Admin/LoadStudentsBySearch",{search:searchText,page:page,pageSize:currentPageSize}, function (res) {
             $("#studentContainer").html(res);
+            let total=$("#hiddenTotalCount").val();
+            $("#totalRecords").text(total);
         });
     }
+      $("#pageSize").on("change", function () {
+        currentPageSize = $(this).val();
+        LoadStudents($("#studentSearch").val(), 1);
+    });
+
+
     let searchTimer=null;
     $("#studentSearch").on("keyup",function(){
         clearTimeout(searchTimer);
         let text=$(this).val();
         searchTimer=setTimeout(function(){
-            LoadStudents(text);
+            LoadStudents(text,1);
 
         },400);
     });
+  
+
     function deleteStudent(id) {
         
         if (confirm("Are you sure to delete this user?")) {
@@ -40,7 +55,7 @@
     function editStudent(id){
         $.get("/Admin/EditStudent?id="+id,function(res){
             $("#modalContainer").html(res);
-            LoadStudents();
+            LoadStudents(text,1);
         })
     }
 </script>

@@ -281,6 +281,55 @@ namespace SchoolManegementNew.Repositories
                 throw;
             }
         }
+        public async Task<PaginationViewModel<SubjectListViewModel>> GetSubjectsPagedAsync(int pageNumber, int pageSize, string? search)
+        {
+            var offset=(pageNumber-1)*pageSize;
+            string query = @"
+
+   
+    SELECT COUNT(*)
+    FROM Subjects
+    WHERE (@Search IS NULL OR Name LIKE '%' + @Search + '%');
+
+   
+    SELECT 
+        s.Id,
+        s.Name,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM UserProfiles up
+                WHERE up.SubjectId = s.Id
+                  AND up.UserType = 'Teacher'
+            )
+            THEN 1
+            ELSE 0
+        END AS IsAssigned
+    FROM Subjects s
+    WHERE (@Search IS NULL OR s.Name LIKE '%' + @Search + '%')
+    ORDER BY s.Name
+    OFFSET @Offset ROWS
+    FETCH NEXT @PageSize ROWS ONLY;
+    ";
+            using var multi = await _db.QueryMultipleAsync(query, new
+            {
+                Offset = offset,
+                PageSize = pageSize,
+                Search = search
+            });
+            var totalCount = await multi.ReadFirstAsync<int>();
+            var subjects = await multi.ReadAsync<SubjectListViewModel>();
+            
+
+            return new PaginationViewModel<SubjectListViewModel>
+            {
+                TotalCount = totalCount,
+                Items = subjects,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+            };
+        }
     }
 }
 

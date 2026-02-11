@@ -1,5 +1,7 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\Images\school-logo.png.jpg
+wwwroot\js\jquery.min.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -61,8 +63,6 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-wwwroot\js\jquery.min.js
-wwwroot\Images\school-logo.png.jpg
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\wwwroot\css\site.css
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\wwwroot\favicon.ico
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\wwwroot\js\site.js

@@ -15,6 +15,7 @@ namespace SchoolManegementNew.Repositories
         SimpleMarksViewModel GetStudentMarks(string studentUserId, int subjectId);
 
         public int GetTeacherSubjectId(string teacherUserId);
+          Task<PaginationViewModel<TeacherListViewModel>> GetTeachersPagedAsync(int pageNumber, int pageSize, string? search);
     }
 
 }

@@ -14,5 +14,6 @@ namespace SchoolManegementNew.Repositories
         List<Subject> GetFreeSubjects(string teacherId);
 
         public List<SubjectListViewModel> GetAllSubject();
+        Task<PaginationViewModel<SubjectListViewModel>> GetSubjectsPagedAsync(int pageNumber, int pageSize, string? search);
     }
 }

@@ -1,4 +1,7 @@
 ﻿<h3>All Teachers</h3>
+<input type="text" id="teacherSearch"
+    placeholder="Search by name,email or subject"
+    style="margin-bottom:10px;padding:6px;width:250px;" />
 <div id="teacherContainer">
     Loading....
 </div>
@@ -8,12 +11,16 @@
         LoadTeachers();
     });
 
-    function LoadTeachers() {
-        $.post("/Admin/LoadTeachers", function (res) {
+    function LoadTeachers(searchText="",page=1) {
+        let pageSize=$("#pageSize").val()||5;
+        $.get("/Admin/LoadTeachers",{search:searchText,page:page,pageSize:pageSize}, function (res) {
             $("#teacherContainer").html(res);
         });
     }
-
+    $("#teacherSearch").on("keyup",function(){
+        let text=$(this).val();
+        LoadTeachers(text,1);
+    })
     function deleteTeacher(id){
      
         if (confirm("Are you sure to delete this user?")) {
@@ -28,7 +35,7 @@
     function editTeacher(id){
         $.get("/Admin/EditTeacher",{id:id},function(res){
             $("#modalContainer").html(res);
-            LoadTeachers();
+            LoadTeachers(text,1);
         })
     }
 </script>
