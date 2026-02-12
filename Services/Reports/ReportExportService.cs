@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using SchoolManegementNew.Models;
 using SchoolManegementNew.Repositories.Reports;
 namespace SchoolManegementNew.Services.Reports
 {
@@ -62,6 +63,45 @@ namespace SchoolManegementNew.Services.Reports
             var wsUsers = workbook.Worksheets.Add("Users");
             wsUsers.Cell(1, 1).InsertTable(users);
             wsUsers.Columns().AdjustToContents();
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return stream.ToArray();
+        }
+        public byte[] GenerateFilteredUsersExcel(List<UserListViewModel> users)
+        {
+            using var workbook = new XLWorkbook();
+
+            var ws = workbook.Worksheets.Add("Filtered Users");
+
+            // 🔹 Header
+            ws.Cell(1, 1).Value = "Name";
+            ws.Cell(1, 2).Value = "Email";
+            ws.Cell(1, 3).Value = "Phone";
+            ws.Cell(1, 4).Value = "Role";
+            ws.Cell(1, 5).Value = "Subject / Roll";
+
+            // Header styling
+            var headerRange = ws.Range(1, 1, 1, 5);
+            headerRange.Style.Font.Bold = true;
+            headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+            headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            // 🔹 Data
+            int row = 2;
+            foreach (var u in users)
+            {
+                ws.Cell(row, 1).Value = u.FullName;
+                ws.Cell(row, 2).Value = u.Email;
+                ws.Cell(row, 3).Value = u.PhoneNumber;
+                ws.Cell(row, 4).Value = u.UserType;
+                ws.Cell(row, 5).Value =
+                    u.UserType == "Teacher" ? u.SubjectName : u.RollNumber;
+
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
 
             using var stream = new MemoryStream();
             workbook.SaveAs(stream);

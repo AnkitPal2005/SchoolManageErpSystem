@@ -1,5 +1,6 @@
 //using DinkToPdf;
 //using DinkToPdf.Contracts;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using SchoolManegementNew.Data;
 using SchoolManegementNew.Repositories;
 using SchoolManegementNew.Repositories.Reports;
 using SchoolManegementNew.Services;
+//using SchoolManegementNew.Services.Admin;
 using SchoolManegementNew.Services.Reports;
 using System.Data;
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +34,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IAdminReportRepository, AdminRepository>();
 builder.Services.AddScoped<IReportExportService, ReportExportService>();
+builder.Services.AddScoped<SchoolManegementNew.Services.Email.EmailService>();
+//builder.Services.AddScoped<IAdminPdfService, AdminPdfService>();
 
 builder.Services.AddScoped<RazorViewRenderer>();
 

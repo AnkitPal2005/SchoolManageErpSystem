@@ -798,3 +798,5 @@ C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\bin\Debug\net10.0\RBush.dll
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\bin\Debug\net10.0\SixLabors.Fonts.dll
 C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\bin\Debug\net10.0\System.IO.Packaging.dll
+C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\bin\Debug\net10.0\MailKit.dll
+C:\Users\WottaCore - 01\PracticeProjects\SchoolManegementNew\SchoolManegementNew\bin\Debug\net10.0\MimeKit.dll

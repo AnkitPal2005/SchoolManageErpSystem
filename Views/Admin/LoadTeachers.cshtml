@@ -1,24 +1,5 @@
-﻿@* @model List<TeacherListViewModel> *@
+﻿@* @model List<TeacherListViewModel>
 @model PaginationViewModel<TeacherListViewModel>
-@* <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-    <div>
-        Total Records: @Model.TotalCount
-    </div>
-
-    <div>
-        Show
-        <select id="pageSize"
-                onchange="LoadTeachers($('#teacherSearch').val(),1)">
-            @foreach (var size in new[] {1,2, 3, 5, 10, 20 })
-            {
-                <option value="@size" selected="@(Model.PageSize == size)" class="btn btn-toolbar">
-                    @size
-                </option>
-            }
-        </select>
-        entries
-    </div>
-</div> *@
 <div class="d-flex justify-content-between align-items-center mb-3">
 
     <div class="fw-semibold">
@@ -66,6 +47,7 @@
 
                     <button class="btn btn-sm btn-warning"
                             onclick="editTeacher('@t.UserId')">
+                        
                         Edit
                     </button>
 
@@ -102,4 +84,87 @@
             </li>
         }
     </ul>
-</nav>
+</nav> *@
+@model PaginationViewModel<TeacherListViewModel>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted">Total Records: <b>@Model.TotalCount</b></span>
+
+    <div class="d-flex align-items-center gap-2">
+        <span>Show</span>
+        <select id="pageSize"
+                class="form-select form-select-sm w-auto"
+                onchange="LoadTeachers($('#teacherSearch').val(),1)">
+            @foreach (var size in new[] { 5, 10, 20 })
+            {
+                <option value="@size" selected="@(Model.PageSize == size)">
+                    @size
+                </option>
+            }
+        </select>
+        <span>entries</span>
+    </div>
+</div>
+
+<table class="table teacher-table align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Subject</th>
+            <th width="120">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model.Items)
+        {
+            <tr>
+                <td>@t.FullName</td>
+                <td>@t.Email</td>
+                <td>@t.PhoneNumber</td>
+                <td>
+                    @if (t.SubjectId != null)
+                    {
+                        <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                            @t.SubjectName
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary-subtle text-secondary px-3 py-2">
+                            Unassigned
+                        </span>
+                    }
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-1"
+                            onclick="editTeacher('@t.UserId')">
+                        <i class="fa fa-pen"></i>
+                    </button>
+
+                    @if (t.SubjectId == null)
+                    {
+                        <button class="btn btn-sm btn-danger"
+                                onclick="deleteTeacher('@t.UserId')">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<ul class="pagination pagination-sm mt-3">
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+            <a href="javascript:void(0)"
+               class="page-link"
+               onclick="LoadTeachers($('#teacherSearch').val(), @i)">
+                @i
+            </a>
+        </li>
+    }
+</ul>

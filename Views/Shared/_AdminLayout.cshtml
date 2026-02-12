@@ -1,0 +1,429 @@
+﻿@* <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - School Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<style>
+    body {
+    background: linear-gradient(135deg,#eef2ff,#f8fafc);
+    font-family: 'Segoe UI', sans-serif;
+    }
+
+    .admin-wrapper {
+    display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: linear-gradient(180deg,#4338ca,#312e81);
+    color: #fff;
+    position: fixed;
+    padding-top: 10px;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+    }
+
+    .sidebar h4 {
+    text-align: center;
+    padding: 20px 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+    }
+
+    .sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    color: #e0e7ff;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    }
+
+    .sidebar a:hover {
+    background: rgba(255,255,255,0.1);
+    border-left: 4px solid #fff;
+    transform: translateX(5px);
+    color: #fff;
+    }
+
+    /* MAIN */
+    .main-content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    }
+
+    /* TOPBAR */
+    .topbar {
+    height: 65px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    /* CONTENT */
+    .content-area {
+    padding: 30px;
+    }
+
+    /* STAT CARDS */
+    .stat-card {
+    border-radius: 18px;
+    padding: 25px;
+    color: #fff;
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .stat-card:hover {
+    transform: translateY(-6px);
+    }
+
+    .stat-card h6 {
+    opacity: 0.9;
+    }
+
+    .stat-card h2 {
+    font-weight: 700;
+    }
+
+    .bg-blue {
+    background: linear-gradient(135deg,#3b82f6,#1d4ed8);
+    }
+
+    .bg-green {
+    background: linear-gradient(135deg,#22c55e,#15803d);
+    }
+
+    .bg-purple {
+    background: linear-gradient(135deg,#a855f7,#6d28d9);
+    }
+
+    /* CARD */
+    .card {
+    border-radius: 16px;
+    border: none;
+    }
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-wrapper">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h4>School MS</h4>
+
+            <a asp-controller="Admin" asp-action="Dashboard">
+                <i class="fa fa-chart-line me-2"></i> Dashboard
+            </a>
+            <a asp-controller="Admin" asp-action="Teachers">
+                <i class="fa fa-chalkboard-user me-2"></i> Teachers
+            </a>
+            <a asp-controller="Admin" asp-action="Students">
+                <i class="fa fa-user-graduate me-2"></i> Students
+            </a>
+            <a asp-controller="Admin" asp-action="Subjects">
+                <i class="fa fa-book me-2"></i> Subjects
+            </a>
+            <a asp-controller="Admin" asp-action="Users">
+                <i class="fa fa-users me-2"></i> All Users
+            </a>
+           
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main-content">
+            <div class="topbar">
+                <h6 class="mb-0">Welcome Admin 👋</h6>
+                <partial name="_LoginPartial" />
+            </div>
+            <!-- TOP BAR -->
+          
+
+            
+
+            <!-- PAGE CONTENT -->
+            <div class="content-area">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html> *@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - School Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg,#eef2ff,#f8fafc);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .admin-wrapper {
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: linear-gradient(180deg,#4338ca,#312e81);
+            color: #fff;
+            position: fixed;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+        }
+
+            .sidebar h4 {
+                text-align: center;
+                padding: 20px 0;
+                font-weight: 600;
+                letter-spacing: 1px;
+            }
+
+            .sidebar a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 14px 20px;
+                color: #e0e7ff;
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                border-left: 4px solid transparent;
+            }
+
+                .sidebar a:hover {
+                    background: rgba(255,255,255,0.1);
+                    border-left: 4px solid #fff;
+                    transform: translateX(5px);
+                    color: #fff;
+                }
+
+        /* MAIN */
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+        }
+
+        /* TOPBAR */
+        .topbar {
+            height: 65px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .content-area {
+            padding: 30px;
+        }
+
+        /* STAT CARDS */
+        .stat-card {
+            border-radius: 18px;
+            padding: 25px;
+            color: #fff;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transition: all 0.35s ease;
+        }
+
+            .stat-card:hover {
+                transform: translateY(-6px);
+            }
+
+        .bg-blue {
+            background: linear-gradient(135deg,#3b82f6,#1d4ed8);
+        }
+
+        .bg-green {
+            background: linear-gradient(135deg,#22c55e,#15803d);
+        }
+
+        .bg-purple {
+            background: linear-gradient(135deg,#a855f7,#6d28d9);
+        }
+
+        .card {
+            border-radius: 16px;
+            border: none;
+        }
+        /* CHART CARDS */
+        .chart-card {
+            padding: 20px;
+            border-radius: 18px;
+            background: #ffffff;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+        }
+
+        .chart-header {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 15px;
+            color: #374151;
+        }
+
+        /* FIX DONUT SIZE */
+        #donutChart {
+            max-width: 260px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* FIX BAR HEIGHT */
+        #barChart {
+            margin-top: 10px;
+        }
+        /* STAT CARDS */
+        .stat-card {
+            border-radius: 16px;
+            padding: 22px;
+            color: #fff;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        /* CHART CARDS */
+        .chart-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+        }
+
+        .chart-header {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .chart-wrapper {
+            height: 240px;
+        }
+
+        .donut-wrapper {
+            max-width: 220px;
+            margin: 0 auto;
+        }
+
+        .teacher-card {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .teacher-table thead {
+            background: #f1f5f9;
+        }
+
+        .teacher-table th {
+            font-size: 13px;
+            text-transform: uppercase;
+            color: #475569;
+        }
+
+        .teacher-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .teacher-table td {
+            font-size: 14px;
+            color: #334155;
+        }
+
+        .badge {
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="admin-wrapper">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <h4>School MS</h4>
+
+            <a asp-controller="Admin" asp-action="Dashboard">
+                <i class="fa fa-chart-line"></i> Dashboard
+            </a>
+            <a asp-controller="Admin" asp-action="Teachers">
+                <i class="fa fa-chalkboard-user"></i> Teachers
+            </a>
+            <a asp-controller="Admin" asp-action="Students">
+                <i class="fa fa-user-graduate"></i> Students
+            </a>
+            <a asp-controller="Admin" asp-action="Subjects">
+                <i class="fa fa-book"></i> Subjects
+            </a>
+            <a asp-controller="Admin" asp-action="Users">
+                <i class="fa fa-users"></i> All Users
+            </a>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main-content">
+
+            <div class="topbar">
+                <h6 class="mb-0">Welcome Admin 👋</h6>
+                <partial name="_LoginPartial" />
+            </div>
+
+            <div class="content-area">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

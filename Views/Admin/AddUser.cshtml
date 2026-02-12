@@ -1,4 +1,5 @@
-﻿<div class="modal fade show" tabindex="-1" style="display:block;">
+﻿@* <div class="modal fade show" tabindex="-1" style="display:block;"> *@
+    <div class="modal fade" id="addUserModal" tabindex="-1">
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
@@ -41,10 +42,25 @@
 </div>
 </div>
 <script>
-function closeModal()
-{
-    $(".modal").remove();
-}
+// function closeModal()
+// {
+//     $(".modal").remove();
+// }
+    function openAddUser() {
+        $.get("/Admin/AddUser", function (res) {
+            $("#modalContainer").html(res);
+
+            let modal = new bootstrap.Modal(
+                document.getElementById("addUserModal")
+            );
+            modal.show();
+        });
+    }
+        function closeModal() {
+        let modalEl = document.getElementById("addUserModal");
+        let modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+    }
 
 function toggleFields()
 {

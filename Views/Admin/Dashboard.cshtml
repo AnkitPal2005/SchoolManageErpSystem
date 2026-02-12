@@ -1,84 +1,164 @@
 ﻿@model DashboardViewModel
-@* @{
-    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
-} *@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
 
-<i>
-    <h3 style="color:blue">Admin Dashboard</h3>
-</i>
-@* @if (Model != null)
-{
-    <div class="row">
+<h4 class="mb-4 fw-semibold">Admin Dashboard</h4>
 
-        <div class="col-md-4">
-            <div class="card p-3 shadow">
-                <h5>Total Teachers</h5>
-                <h2 id="teacherCount">@Model.TeacherCount</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card p-3 shadow">
-                <h5>Total Students</h5>
-                <h2 id="studentCount">@Model.StudentCount</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card p-3 shadow">
-                <h5>Total Subjects</h5>
-                <h2 id="subjectCount">@Model.SubjectCount</h2>
-            </div>
-        </div>
-
-    </div>
-} *@
-<div class="row">
-<div class="col-md-4">
-    <div class="card p-3 shadow">
-        <h5>Total Teachers</h5>
-        <h2 id="teacherCount"></h2>
-    </div>
-</div>
-
-<div class="col-md-4">
-    <div class="card p-3 shadow">
-        <h5>Total Students</h5>
-        <h2 id="studentCount"></h2>
-    </div>
-</div>
-
-<div class="col-md-4">
-    <div class="card p-3 shadow">
-        <h5>Total Subjects</h5>
-        <h2 id="subjectCount"></h2>
-    </div>
-</div>
+<!-- STAT CARDS -->
+<div class="row g-4">
     <div class="col-md-4">
-        <div class="card p-3 shadow">
-            <h5>Export PDF</h5>
-            <a href="/Admin/ExportFullReportPdf" class="btn btn-success">
+        <div class="stat-card bg-blue">
+            <h6><i class="fa fa-chalkboard-user me-2"></i>Total Teachers</h6>
+            <h2 id="teacherCount">0</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card bg-green">
+            <h6><i class="fa fa-user-graduate me-2"></i>Total Students</h6>
+            <h2 id="studentCount">0</h2>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card bg-purple">
+            <h6><i class="fa fa-book me-2"></i>Total Subjects</h6>
+            <h2 id="subjectCount">0</h2>
+        </div>
+    </div>
+</div>
+
+<!-- CHARTS -->
+<div class="row mt-5 g-4">
+
+    <div class="col-md-8">
+        <div class="chart-card">
+            <div class="chart-header">📊 School Overview</div>
+            <div class="chart-wrapper">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="chart-card text-center">
+            <div class="chart-header">🍩 Distribution</div>
+            <div class="donut-wrapper">
+                <canvas id="donutChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- EXPORT / INFO -->
+<div class="row mt-5 g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4">
+            <h6 class="fw-semibold mb-3">Export Reports</h6>
+            <a href="/Admin/ExportFullReportPdf" class="btn btn-danger w-100 mb-2">
                 <i class="fa fa-file-pdf"></i> Export PDF
             </a>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card p-3 shadow">
-            <h5>Export Excel File</h5>
-            <a href="/Admin/ExportFullReportExcel" class="btn btn-success">
-                <i class="fa fa-file-pdf"></i> Export Excel
+            <a href="/Admin/ExportFullReportExcel" class="btn btn-success w-100">
+                <i class="fa fa-file-excel"></i> Export Excel
             </a>
         </div>
     </div>
+
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4">
+            <h6 class="fw-semibold mb-3">System Status</h6>
+            <p class="text-muted mb-1">✔ Role Based Access</p>
+            <p class="text-muted mb-1">✔ PDF / Excel / CSV</p>
+            <p class="text-muted mb-1">✔ Email & ZIP Reports</p>
+            <p class="text-muted mb-1">✔ Secure Admin Panel</p>
+        </div>
+    </div>
 </div>
-<script>
-    function GetDashboardCount(){
-        $.get("/Admin/GetDashboardCount",function(res){
-            $("#teacherCount").text(res.teacherCount);
-             $("#studentCount").text(res.studentCount);
-              $("#subjectCount").text(res.subjectCount);
-              $("#subject").text(res.subjectCount);
-        })
-    }
-  GetDashboardCount();
-</script>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let barChart, donutChart;
+
+        function animateCount(id, end) {
+            let current = 0;
+            const step = Math.ceil(end / 25);
+            const el = document.getElementById(id);
+
+            const timer = setInterval(() => {
+                current += step;
+                if (current >= end) {
+                    el.innerText = end;
+                    clearInterval(timer);
+                } else {
+                    el.innerText = current;
+                }
+            }, 25);
+        }
+
+        function loadCharts(data) {
+
+            if (barChart) barChart.destroy();
+            if (donutChart) donutChart.destroy();
+
+            barChart = new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Teachers', 'Students', 'Subjects'],
+                    datasets: [{
+                        data: [data.teacherCount, data.studentCount, data.subjectCount],
+                        backgroundColor: ['#2563eb','#16a34a','#7c3aed'],
+                        borderRadius: 12,
+                        barThickness: 45
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 5 },
+                            grid: { color: '#e5e7eb' }
+                        }
+                    }
+                }
+            });
+
+            donutChart = new Chart(document.getElementById('donutChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Teachers', 'Students', 'Subjects'],
+                    datasets: [{
+                        data: [data.teacherCount, data.studentCount, data.subjectCount],
+                        backgroundColor: ['#2563eb','#16a34a','#7c3aed'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 14, padding: 12 }
+                        }
+                    }
+                }
+            });
+        }
+
+        function GetDashboardCount() {
+            $.get("/Admin/GetDashboardCount", function (res) {
+                animateCount("teacherCount", res.teacherCount);
+                animateCount("studentCount", res.studentCount);
+                animateCount("subjectCount", res.subjectCount);
+                loadCharts(res);
+            });
+        }
+
+        GetDashboardCount();
+    </script>
+}

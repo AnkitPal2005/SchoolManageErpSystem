@@ -1,4 +1,6 @@
-﻿
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
 
 <h3>All Users</h3>
 @* <input type="text" id="userSearch"
@@ -69,9 +71,163 @@
 </div>
 
 <button class="btn btn-primary mb-3" onclick="openAddUser()">Add User</button>
+@* <button class="btn btn-success"
+        onclick="exportUsersPdf()" style="margin-bottom:17px">
+    Export Filtered PDF
+    
+</button>
+<button class="btn btn-warning"
+        onclick="exportUsersCsv()"
+        style="margin-bottom:17px">
+    Export Filtered CSV
+</button>
+
+<button class="btn btn-warning"
+onclick="exportUsersExcel()" style="margin-bottom:17px">Export Filtered Excel Sheet</button> *@
+<button class="btn btn-success" onclick="exportUsersPdf()" style="margin-bottom:17px">
+    📄 Export PDF
+</button>
+
+<button class="btn btn-warning" onclick="exportUsersCsv()" style="margin-bottom:17px">
+    🧾 Export CSV
+</button>
+
+<button class="btn btn-info" onclick="exportUsersExcel()" style="margin-bottom:17px">
+    📊 Export Excel
+</button>
+<button class="btn btn-info"
+        onclick="sendPdfMail()" style="margin-bottom:17px">
+    Send PDF via Email
+</button>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#zipEmailModal" style="margin-bottom:17px">
+    📦 Send ZIP Report by Email
+</button>
+<div class="modal fade" id="zipEmailModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Send ZIP Report by Email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input type="email" id="zipEmail" class="form-control"
+                           placeholder="example@gmail.com" />
+                </div>
+
+               
+
+                <div class="mb-3">
+                    <label>Role</label>
+                    <select id="zipRole" class="form-select">
+                        <option value="">All Roles</option>
+
+                        @foreach (var r in ViewBag.Roles)
+                        {
+                            <option value="@r">@r</option>
+                        }
+                    </select>
+                </div>
+
+                <div id="zipStatus" class="text-center text-muted d-none">
+                    ⏳ Sending email, please wait...
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-success" onclick="sendZipByEmail()">
+                    📤 Send ZIP
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div id="userContainer">UserList.....</div>
 <div id="modalContainer"></div>
 <script>
+        function sendZipByEmail() {
+
+        var email = $("#zipEmail").val();
+        if (!email) {
+            alert("Please enter email");
+            return;
+        }
+
+        $("#zipStatus").removeClass("d-none");
+
+        $.ajax({
+            url: "/Admin/SendUsersZipByEmail",
+            type: "POST",
+            data: {
+                toEmail: email,
+                search: $("#zipSearch").val(),
+                role: $("#zipRole").val(),
+                subjectId: $("#zipSubjectId").val()
+            },
+            success: function (res) {
+                $("#zipStatus").addClass("d-none");
+                alert(res.message);
+                $("#zipEmailModal").modal('hide');
+            },
+            error: function () {
+                $("#zipStatus").addClass("d-none");
+                alert("Something went wrong");
+            }
+        });
+    }
+
+        function sendPdfMail() {
+        let email = prompt("Enter receiver email");
+        if (!email) return;
+
+        let search = $("#userSearch").val();
+        let role = $("#roleFilter").val();
+        let subjectId = $("#subjectFilter").val();
+
+        $.post("/Admin/SendUsersPdfByEmail", {
+            toEmail: email,
+            search: search,
+            role: role,
+            subjectId: subjectId
+        }, function (res) {
+            alert(res.message);
+        });
+    }
+
+    function exportUsersPdf(){
+        let search=$("#userSearch").val();
+        let role=$("#roleFilter").val();
+        let subjectId=$("#subjectFilter").val();
+        let pageSize=$("#pageSize").val();
+        let url=`/Admin/ExportUsersPdf?search=${search}&role=${role}&subjectId=${subjectId}`;
+        window.open(url,"_self");
+       
+    }
+    function exportUsersExcel(){
+        let search=$("#userSearch").val();
+        let role=$("#roleFilter").val();
+        let subjectId=$("#subjectFilter").val();
+        let pageSize=$("#pageSize").val();
+        let url=`/Admin/ExportUsersExcel?search=${search}&role=${role}&subjectId=${subjectId}`;
+        window.open(url,"_self");
+
+    }
+        function exportUsersCsv() {
+        let search = $("#userSearch").val();
+        let role = $("#roleFilter").val();
+        let subjectId = $("#subjectFilter").val();
+
+        let url = `/Admin/ExportUsersCsv?search=${search}&role=${role}&subjectId=${subjectId}`;
+
+        window.open(url,"_self");
+    }
+
     function closeModal()
     {
         $(".modal").remove();
@@ -177,10 +333,10 @@
             });
     }
     function RemoveFilters(){
-        $("userSearch").val("");
-        role = $("#roleFilter").val("");
-          $("pageSize").val("5");
-            subjectId=$("#subjectFilter").val("");
+        $("#userSearch").val("");
+         $("#roleFilter").val("");
+          $("#pageSize").val("5");
+            $("#subjectFilter").val("");
            applyFilters(1);
     }
 

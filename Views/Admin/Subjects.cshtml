@@ -1,8 +1,11 @@
-﻿<h3>All Subjects</h3>
-<button class="btn btn-primary mb-3" onclick="openAddSubject()">Add Subject</button>
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>All Subjects</h3>
 <input type="text" id="subjectSearch"
        placeholder="Search by Subject Name"
        style="margin-bottom:10px; padding:6px; width:250px;" />
+<button class="btn btn-primary mb-3" onclick="openAddSubject()" style="margin-top:10px">Add Subject</button>
 <div id="subjectContainer">
     Loading......
 </div>

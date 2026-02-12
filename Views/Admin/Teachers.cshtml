@@ -1,4 +1,7 @@
-﻿<h3>All Teachers</h3>
+﻿@* @{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h3>All Teachers</h3>
 <input type="text" id="teacherSearch"
     placeholder="Search by name,email or subject"
     style="margin-bottom:10px;padding:6px;width:250px;" />
@@ -38,4 +41,65 @@
             LoadTeachers(text,1);
         })
     }
-</script>
+</script> *@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">👨‍🏫 All Teachers</h4>
+
+    <input type="text"
+           id="teacherSearch"
+           class="form-control w-25"
+           placeholder="🔍 Search name, email or subject" />
+</div>
+
+<div class="card teacher-card">
+    <div class="card-body">
+
+        <div id="teacherContainer" class="text-center py-4 text-muted">
+            Loading teachers...
+        </div>
+
+    </div>
+</div>
+
+<div id="modalContainer"></div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            LoadTeachers();
+        });
+
+        function LoadTeachers(searchText = "", page = 1) {
+            let pageSize = $("#pageSize").val() || 5;
+
+            $.get("/Admin/LoadTeachers",
+                { search: searchText, page: page, pageSize: pageSize },
+                function (res) {
+                    $("#teacherContainer").html(res);
+                });
+        }
+
+        $("#teacherSearch").on("keyup", function () {
+            LoadTeachers($(this).val(), 1);
+        });
+
+        function deleteTeacher(id) {
+            if (confirm("Are you sure you want to delete this teacher?")) {
+                $.post("/Admin/DeleteTeacher", { id: id }, function (res) {
+                    alert(res.message);
+                    if (res.success) LoadTeachers();
+                });
+            }
+        }
+
+        function editTeacher(id) {
+            $.get("/Admin/EditTeacher", { id: id }, function (res) {
+                $("#modalContainer").html(res);
+            });
+        }
+    </script>
+}

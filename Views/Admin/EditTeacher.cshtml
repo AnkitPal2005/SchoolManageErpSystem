@@ -1,4 +1,4 @@
-﻿@model SchoolManegementNew.Models.TeacherEditViewModel
+﻿@* @model SchoolManegementNew.Models.TeacherEditViewModel
 
 <div class="modal fade show" style="display:block;">
     <div class="modal-dialog">
@@ -56,6 +56,7 @@
 </div>
 
 <script>
+     
         function closeModal()
     {
         $(".modal").remove();
@@ -82,5 +83,89 @@ function updateTeacher()
         }
     });
 }
+
+</script> *@
+@model TeacherEditViewModel
+
+<div class="modal fade show d-block" style="background:rgba(0,0,0,0.5)">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Edit Teacher</h5>
+                <button class="btn-close" onclick="closeModal()"></button>
+            </div>
+
+            <div class="modal-body">
+                <input type="hidden" id="userId" value="@Model.UserId" />
+
+                <label class="form-label">Full Name</label>
+                <input class="form-control mb-3" id="name" value="@Model.FullName" />
+
+                <label class="form-label">Phone</label>
+                <input class="form-control mb-3" id="phone" value="@Model.PhoneNumber" />
+
+                <label class="form-label">Subject</label>
+                <select class="form-select" id="subject">
+                    <option value="">Unassign Subject</option>
+
+                    @foreach (var s in ViewBag.Subjects)
+                    {
+                        <option value="@s.Id" selected="@(s.Id == Model.SubjectId)">
+                            @s.Name
+                        </option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-success" onclick="updateTeacher()">Update</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function closeModal() {
+        $(".modal").remove();
+    }
+
+    // function updateTeacher() {
+    //     $.post("/Admin/EditTeacher", {
+    //         UserId: $("#userId").val(),
+    //         FullName: $("#name").val(),
+    //         PhoneNumber: $("#phone").val(),
+    //         SubjectId: $("#subject").val()
+    //     }, function (res) {
+    //         alert(res.message);
+    //         if (res.success) {
+    //             closeModal();
+    //             LoadTeachers();
+    //         }
+    //     });
+    // }
+               function updateTeacher() {
+        let subjectId = $("#subject").val();
+
+        var data = {
+            UserId: $("#userId").val(),
+            FullName: $("#name").val(),
+            PhoneNumber: $("#phone").val(),
+            // ✅ Empty string ko null mein convert karo
+            SubjectId: subjectId === "" || subjectId === null ? null : parseInt(subjectId)
+        };
+
+        $.post("/Admin/EditTeacher", data, function (res) {
+            alert(res.message);
+            if (res.success) {
+                closeModal();
+                LoadTeachers(); // ✅ Ye function define hona chahiye
+            }
+        });
+    }
+
 
 </script>

@@ -20,31 +20,33 @@ namespace SchoolManegementNew.Services
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
         }
-        public string RenderToString(ControllerContext context,string ViewName,object model)
+        public string RenderToString(ControllerContext context, string ViewName, object model)
         {
             var viewResult = _viewEngine.FindView(context, ViewName, false);
             if (viewResult.View == null)
             {
                 throw new FileNotFoundException($"View '{ViewName}' not found.");
             }
-                var viewData = new ViewDataDictionary(
-            new EmptyModelMetadataProvider(),
-            new ModelStateDictionary())
-                {
-                    Model = model
-                };
-                using var sw = new StringWriter();
-                var viewContext = new ViewContext(
-                    context,
-                    viewResult.View,
-                    viewData,
-                    new TempDataDictionary(context.HttpContext, _tempDataProvider),
-                    sw,
-                    new HtmlHelperOptions()
-                );
-                viewResult.View.RenderAsync(viewContext).GetAwaiter().GetResult();
-                return sw.ToString();
-            }
+            var viewData = new ViewDataDictionary(
+        new EmptyModelMetadataProvider(),
+        new ModelStateDictionary())
+            {
+                Model = model
+            };
+            using var sw = new StringWriter();
+            var viewContext = new ViewContext(
+                context,
+                viewResult.View,
+                viewData,
+                new TempDataDictionary(context.HttpContext, _tempDataProvider),
+                sw,
+                new HtmlHelperOptions()
+            );
+            viewResult.View.RenderAsync(viewContext).GetAwaiter().GetResult();
+            return sw.ToString();
         }
+        
+
     }
+}
 
