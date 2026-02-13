@@ -1,33 +1,13 @@
-﻿@* @model List<SchoolManegementNew.Models.SubjectListViewModel> *@
+﻿
     @model PaginationViewModel<SubjectListViewModel>
-@*     <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-    <div>
-        Total Records: @Model.TotalCount
-    </div>
 
-    <div>
-        Show
-      
-        <select id="pageSize" onchange="currentPageSize=this.value; LoadSubjects($('#subjectSearch').val(),1)" class="btn btn-warning">
-          
-            <option value="3" selected="@(Model.PageSize == 3)" class="btn btn-success">3</option>
-            <option value="5" selected="@(Model.PageSize==5)" class="btn btn-danger">5</option>
-            <option value="10" selected="@(Model.PageSize==10)" class="btn btn-dark">10</option>
-            <option value="20" selected="@(Model.PageSize==20)" class="btn btn-primary">20</option>
-            <option value="50" selected="@(Model.PageSize == 50)" class="btn btn-primary">50</option>
-        </select>
-        entries
-    </div>
-</div> *@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <div class="fw-semibold">
-        Total Records: @Model.TotalCount
-    </div>
+    <span class="text-muted">Total Records: <b>@Model.TotalCount</b></span>
 
     <div class="d-flex align-items-center gap-2">
-        <label class="mb-0">Show</label>
+        <span>Show</span>
 
         <select id="pageSize"
                 class="form-select form-select-sm w-auto"
@@ -37,9 +17,7 @@
                 <option value="@size" selected="@(Model.PageSize == size)">
                     @size
                 </option>
-                @* <option value="@size" selected=" @(Model.PageSize == size ? "selected" : "")">
-                    @size
-                </option> *@
+               
             }
         </select>
 
@@ -47,7 +25,7 @@
     </div>
 
 </div>
-<table class="table table-bordered table-striped">
+<table class="app-table">
     <thead>
         <tr>
             <th>Subject Name</th>
@@ -61,9 +39,9 @@
             <tr>
                 <td>@s.Name</td>
                 <td>
-                    <button class="btn btn-sm btn-warning"
+                    <button class="btn btn-sm btn-warning me-1"
                             onclick="editSubject(@s.Id)">
-                        Edit
+                        <i class="fa fa-pen"></i>
                     </button>
                     
                     @if (s.IsAssigned){
@@ -77,7 +55,7 @@
                        
                         <button class="btn btn-sm btn-danger"
                                 onclick="deleteSubject(@s.Id)">
-                            Delete
+                            <i class="fa fa-trash"></i>
                         </button>
                     }
                 </td>
@@ -85,8 +63,8 @@
         }
     </tbody>
 </table>
-<nav>
-    <ul class="pagination">
+
+<ul class="pagination pagination-sm mt-3">
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
@@ -98,4 +76,78 @@
             </li>
         }
     </ul>
-</nav>
+
+@* @model PaginationViewModel<StudentListViewModel>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted">Total Records: <b>@Model.TotalCount</b></span>
+
+    <div class="d-flex align-items-center gap-2">
+        <span>Show</span>
+        <select id="pageSize"
+                class="form-select form-select-sm w-auto"
+                onchange="LoadStudents($('#studentSearch').val(),1)">
+            @foreach (var size in new[] { 5, 10, 20 })
+            {
+                <option value="@size" selected="@(Model.PageSize == size)">
+                    @size
+                </option>
+            }
+        </select>
+        <span>entries</span>
+    </div>
+</div>
+
+<table class="table module-table align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Roll Number</th>
+            <th width="130">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var s in Model.Items)
+        {
+            <tr>
+                <td class="fw-semibold">@s.FullName</td>
+                <td>@s.Email</td>
+                <td>@s.PhoneNumber</td>
+
+                <td>
+                    <span class="badge badge-soft">
+                        @s.RollNumber
+                    </span>
+                </td>
+
+                <td>
+                    <button class="btn btn-sm btn-warning me-1"
+                            onclick="editStudent('@s.UserId')">
+                        <i class="fa fa-pen"></i>
+                    </button>
+
+                    <button class="btn btn-sm btn-danger"
+                            onclick="deleteStudent('@s.UserId')">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<ul class="pagination pagination-sm mt-3">
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+            <a href="javascript:void(0)"
+               class="page-link"
+               onclick="LoadStudents($('#studentSearch').val(), @i)">
+                @i
+            </a>
+        </li>
+    }
+</ul> *@

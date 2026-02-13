@@ -2,12 +2,15 @@
 //using DinkToPdf.Contracts;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SchoolManegementNew.Data;
 using SchoolManegementNew.Repositories;
 using SchoolManegementNew.Repositories.Reports;
 using SchoolManegementNew.Services;
+using SchoolManegementNew.Services.Email;
+
 //using SchoolManegementNew.Services.Admin;
 using SchoolManegementNew.Services.Reports;
 using System.Data;
@@ -36,6 +39,9 @@ builder.Services.AddScoped<IAdminReportRepository, AdminRepository>();
 builder.Services.AddScoped<IReportExportService, ReportExportService>();
 builder.Services.AddScoped<SchoolManegementNew.Services.Email.EmailService>();
 //builder.Services.AddScoped<IAdminPdfService, AdminPdfService>();
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IEmailSender, IdentityMailSender>();
+
 
 builder.Services.AddScoped<RazorViewRenderer>();
 
@@ -55,6 +61,16 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/")
+    {
+        context.Response.Redirect("/Identity/Account/Login");
+        return;
+    }
+    await next();
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 

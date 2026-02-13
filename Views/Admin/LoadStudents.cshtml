@@ -1,7 +1,6 @@
-﻿@* @model List<StudentListViewModel> *@
-@* @model PaginationViewModel<StudentViewModel> *@
+﻿
 @model PaginationViewModel<StudentListViewModel>
-<div class="d-flex justify-content-between align-items-center mb-3">
+@* <div class="d-flex justify-content-between align-items-center mb-3">
     <div class="fw-semibold">
         Total Records: @Model.TotalCount
     </div>
@@ -22,31 +21,7 @@
         entries
     </div>
 </div>
-@* <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <div class="fw-semibold">
-        Total Records: @Model.TotalCount
-    </div>
-
-    <div class="d-flex align-items-center gap-2">
-        <label class="mb-0">Show</label>
-
-        <select id="pageSize"
-                class="form-select form-select-sm w-auto"
-                onchange="LoadStudents($('#studentSearch').val(),1)">
-            @foreach (var size in new[] { 3, 5, 10, 20 })
-            {
-                <option value="@size" selected="@(Model.PageSize == size)">
-                    @size
-                </option>
-       
-            }
-        </select>
-
-        <span>entries</span>
-    </div>
-
-</div> *@
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -87,4 +62,60 @@
             </li>
         }
     </ul>
-</nav>
+</nav> *@
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted">Total Records: <b>@Model.TotalCount</b></span>
+    <div class="d-flex align-items-center gap-2">
+        <span>Show</span>
+        <select id="pageSize"
+                class="form-select form-select-sm w-auto"
+                onchange="LoadStudents($('#studentSearch').val(),1)">
+            @foreach (var size in new[] { 5, 10, 20 })
+            {
+                <option value="@size" selected="@(Model.PageSize == size)">
+                    @size
+                </option>
+            }
+        </select>
+        <span>entries</span>
+    </div>
+</div>
+<table class="table teacher-table align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>RollNumber</th>
+            <th width="120">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var s in Model.Items)
+{
+            <tr>
+                <td>@s.FullName</td>
+                <td>@s.Email</td>
+                <td>@s.PhoneNumber</td>
+                <td>@s.RollNumber</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-1" onclick="editStudent('@s.UserId')"> <i class="fa fa-pen"></i></button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteStudent('@s.UserId')"> <i class="fa fa-trash"></i></button>
+                </td>
+            </tr>
+}
+    </tbody>
+</table>
+<ul class="pagination pagination-sm mt-3">
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+            <a href="javascript:void(0)"
+               class="page-link"
+               onclick="LoadStudents($('#studentSearch').val(), @i)">
+                @i
+            </a>
+        </li>
+    }
+</ul>

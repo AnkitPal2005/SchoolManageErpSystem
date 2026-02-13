@@ -1,7 +1,7 @@
 ﻿@model SchoolManegementNew.Models.StudentListViewModel
 
-<div class="modal fade show" style="display:block;">
-    <div class="modal-dialog">
+<div class="modal fade show d-block" style="background:rgba(0,0,0,0.5)">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -12,20 +12,20 @@
             <div class="modal-body">
 
                 <input type="hidden" id="userId" value="@Model.UserId" />
-
+                <label class="form-label">Full Name</label>
                 <input class="form-control mb-2" id="fullName"
                        value="@Model.FullName" placeholder="Name" />
-
+                <label class="form-label">Phone</label>
                 <input class="form-control mb-2" id="phone"
                        value="@Model.PhoneNumber" placeholder="Phone" />
-
+                       <label class="form-label">Roll Number</label>
                 <input class="form-control mb-2" id="roll"
                        value="@Model.RollNumber" placeholder="Roll No" />
 
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn btn-outline-secondary" onclick="closeModal()">Close</button>
                 <button class="btn btn-success" onclick="updateStudent()">Update</button>
             </div>
 
@@ -62,3 +62,4 @@
     }
 
 </script>
+

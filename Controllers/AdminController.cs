@@ -673,7 +673,8 @@ This is an auto-generated email.
                 {
                     Email = model.Email,
                     UserName = model.Email,
-                    PhoneNumber = model.PhoneNumber
+                    PhoneNumber = model.PhoneNumber,
+                    EmailConfirmed=true
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);

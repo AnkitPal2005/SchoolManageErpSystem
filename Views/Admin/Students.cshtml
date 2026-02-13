@@ -1,8 +1,8 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-<h3>All Students</h3>
-@* <input type="hidden" id="hiddenTotalCount" value="Model.TotalCount" /> *@
+@* <h3>All Students</h3>
+
 
 <input type="text" id="studentSearch"
        placeholder="Search by name or email"
@@ -46,6 +46,77 @@
 
     function deleteStudent(id) {
         
+        if (confirm("Are you sure to delete this user?")) {
+            $.post("/Admin/DeleteStudent", { id: id }, function (res) {
+                alert(res.message);
+                if (res.success) {
+                    LoadStudents();
+                }
+            });
+        }
+    }
+    function editStudent(id){
+        $.get("/Admin/EditStudent?id="+id,function(res){
+            $("#modalContainer").html(res);
+            LoadStudents(text,1);
+        })
+    }
+</script> *@
+
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0">👨‍🏫 All Students</h4>
+    <input type="text"
+           id="studentSearch"
+           class="form-control w-25"
+           placeholder="🔍 Search name" />
+</div>
+<div class="card teacher-card">
+    <div class="card-body">
+
+        <div id="studentContainer" class="text-center py-4 text-muted">
+            Loading Students...
+        </div>
+
+    </div>
+</div>
+<div id="modalContainer"></div>
+<script>
+    let currentPageSize = $("#pageSize").val() || 3;
+
+    $(function () {
+        LoadStudents();
+    });
+
+    function LoadStudents(searchText="", page=1) {
+        let pageSize = $("#pageSize").val() || 3;
+        $.get("/Admin/LoadStudentsBySearch",{search:searchText,page:page,pageSize:currentPageSize}, function (res) {
+            $("#studentContainer").html(res);
+            let total=$("#hiddenTotalCount").val();
+            $("#totalRecords").text(total);
+        });
+    }
+      $("#pageSize").on("change", function () {
+        currentPageSize = $(this).val();
+        LoadStudents($("#studentSearch").val(), 1);
+    });
+
+
+    let searchTimer=null;
+    $("#studentSearch").on("keyup",function(){
+        clearTimeout(searchTimer);
+        let text=$(this).val();
+        searchTimer=setTimeout(function(){
+            LoadStudents(text,1);
+
+        },400);
+    });
+
+
+    function deleteStudent(id) {
+
         if (confirm("Are you sure to delete this user?")) {
             $.post("/Admin/DeleteStudent", { id: id }, function (res) {
                 alert(res.message);
